@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import Navbar from './components/layouts/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './page/Dashboard';
