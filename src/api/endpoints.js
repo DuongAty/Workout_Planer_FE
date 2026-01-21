@@ -54,3 +54,18 @@ export const measurementApi = {
     getLatestProgress: (muscleGroup) => 
     axiosClient.get('/body-measurements/progress', { params: { key: muscleGroup } })
 };
+
+export const stepOfExerciseApi = {
+  create: (exerciseId, data) => {
+    return axiosClient.post(`/steps-of-exercise/${exerciseId}`, data);
+  },
+  getByExercise: (exerciseId) => {
+    return axiosClient.get(`steps-of-exercise/exercise/${exerciseId}`);
+  },
+  update: (id, data) => {
+    return axiosClient.patch(`steps-of-exercise/${id}`, data);
+  },
+  delete: (id) => {
+    return axiosClient.delete(`steps-of-exercise/${id}`);
+  }
+};
