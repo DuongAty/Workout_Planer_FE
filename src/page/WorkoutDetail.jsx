@@ -304,8 +304,8 @@ export default function WorkoutDetail() {
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #5557f5; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #fdba74; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c2c2e7; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #5970f7; }
       `}</style>
     </div>
   );
