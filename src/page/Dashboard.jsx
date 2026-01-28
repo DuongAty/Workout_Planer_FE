@@ -25,11 +25,7 @@ export default function Dashboard() {
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
   const [hasMore, setHasMore] = useState(true);
-
-  // Khởi tạo todayOnly là chuỗi rỗng
   const [filters, setFilters] = useState({ ...INITIAL_FILTERS, todayOnly: '' });
-
-  // Helper để lấy chuỗi ngày hôm nay YYYY-MM-DD
   const getTodayString = () => new Date().toISOString().split('T')[0];
 
   // Click outside calendar
@@ -44,14 +40,11 @@ export default function Dashboard() {
   const loadData = useCallback(async (currentFilters, isAppend = false) => {
     try {
       isAppend ? setLoadingMore(true) : setLoading(true);
-      
       const params = Object.fromEntries(
         Object.entries(currentFilters).filter(([_, v]) => v !== '' && v !== null)
       );
-
       const res = await workoutApi.getAll(params);
       const rawData = res.data?.data || [];
-      
       setHasMore(currentFilters.page < (res.data.totalPages || 1));
       setWorkouts(prev => isAppend ? [...prev, ...rawData] : rawData);
     } catch (err) {
@@ -69,7 +62,6 @@ export default function Dashboard() {
     const initializeDashboard = async () => {
       if (!isFirstRender.current) return;
       isFirstRender.current = false; 
-
       try {
         await workoutApi.checkAllAutoMissed();
         await loadData(filters, false);
@@ -143,7 +135,6 @@ export default function Dashboard() {
               TODAY: {formatDate(new Date())}
             </p>
           </div>
-          
           <div className="flex gap-3">
             <Link to="/measurements" className="flex items-center gap-2 bg-white border-2 border-gray-900 text-gray-900 px-6 py-4 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all hover:bg-gray-50 shadow-sm">
               <Activity size={16} strokeWidth={3} /> Body Measurements
@@ -153,19 +144,16 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
-
         {/* FILTERS & TOOLS */}
         <div className="flex flex-col md:flex-row gap-3 mb-4 bg-white p-3 rounded-[2rem] border border-gray-100 shadow-sm items-center">
           <div className="flex-[2] relative w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             <input name="search" placeholder="Find training program name..." className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500" onChange={handleFilterChange} />
           </div>
-          
           <div className="flex-1 relative w-full">
             <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             <input type="number" min="0" name="numExercises" placeholder="Exercises..." className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500" onChange={handleFilterChange} value={filters.numExercises} />
           </div>
-
           <div className="flex-1 relative w-full" ref={calendarRef}>
             <button onClick={() => setShowCalendar(!showCalendar)} className="w-full flex items-center gap-3 pl-4 pr-4 py-3 bg-gray-50 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-100 transition-all overflow-hidden">
               <CalendarRange size={16} className="text-blue-500 shrink-0" />
@@ -178,7 +166,6 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-
           {/* NÚT LỌC TODAY NHỎ GỌN */}
           <button 
             onClick={toggleTodayFilter}
@@ -192,7 +179,6 @@ export default function Dashboard() {
             TODAY
           </button>
         </div>
-
         {/* Trạng thái filter active */}
         {filters.todayOnly !== '' && (
           <div className="mb-6 flex items-center gap-2 px-2 animate-in fade-in slide-in-from-left duration-300">
@@ -202,7 +188,6 @@ export default function Dashboard() {
             </span>
           </div>
         )}
-
         {/* GRID */}
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="animate-spin text-blue-600" size={48} /></div>
@@ -230,7 +215,6 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
-
             {hasMore && filters.todayOnly === '' && (
               <div className="mt-16 flex justify-center">
                 <button 
@@ -249,7 +233,6 @@ export default function Dashboard() {
           </>
         )}
       </div>
-
       {/* MODALS */}
       <CreateWorkoutModal isOpen={activeModal.type === 'CREATE'} onClose={closeModal} onSuccess={() => loadData(filters)} />
       <EditWorkoutModal isOpen={activeModal.type === 'EDIT_NAME'} workout={activeModal.data} onClose={closeModal} onSuccess={() => loadData(filters)} />

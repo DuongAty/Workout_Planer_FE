@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, ChevronLeft, ListOrdered, Loader2 } from 'lucide-react';
-import toast from 'react-hot-toast';
 import { stepOfExerciseApi } from '../../api/endpoints';
 
 export default function VideoModal({ isOpen, videoUrl, exerciseId, exerciseName, onClose }) {
@@ -30,7 +29,6 @@ export default function VideoModal({ isOpen, videoUrl, exerciseId, exerciseName,
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-300">
       <div className="relative w-full max-w-6xl bg-[#0a0a0a] rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 flex flex-col md:flex-row h-[85vh] max-h-[800px]">
-        
         {/* NÚT ĐÓNG MODAL */}
         <button 
           onClick={() => {
@@ -41,13 +39,11 @@ export default function VideoModal({ isOpen, videoUrl, exerciseId, exerciseName,
         >
           <X size={20} />
         </button>
-
         {/* PHẦN VIDEO PLAYER */}
         <div className={`relative transition-all duration-700 ease-in-out bg-black flex items-center justify-center ${showSteps ? 'md:w-2/3' : 'md:w-full'}`}>
           <video src={videoUrl} controls autoPlay className="w-full h-full object-contain shadow-2xl">
             Your browser does not support video tags.
           </video>
-
           {/* NÚT MŨI TÊN THU NHỎ - CHỮ "STEP" */}
           <button 
             onClick={() => setShowSteps(!showSteps)}
@@ -70,7 +66,6 @@ export default function VideoModal({ isOpen, videoUrl, exerciseId, exerciseName,
             )}
           </button>
         </div>
-
         {/* SIDEBAR DANH SÁCH STEPS */}
         <div 
           className={`bg-white transition-all duration-700 ease-in-out flex flex-col relative
@@ -82,7 +77,6 @@ export default function VideoModal({ isOpen, videoUrl, exerciseId, exerciseName,
             </h3>
             <p className="text-[10px] text-gray-400 font-bold uppercase truncate">{exerciseName}</p>
           </div>
-
           <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-gray-50/50 custom-scrollbar">
             {loading ? (
               <div className="h-full flex items-center justify-center text-blue-600">

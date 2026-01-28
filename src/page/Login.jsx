@@ -36,7 +36,6 @@ export default function Login() {
       {/* Hiệu ứng nền Blur Orbs */}
       <div className="absolute top-0 -right-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-0 -left-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px]" />
-
       <div className="w-full max-w-md relative z-10">
         {/* Brand Header */}
         <div className="text-center mb-8">
@@ -50,10 +49,8 @@ export default function Login() {
             Professional Training Management System
           </p>
         </div>
-
         {/* Login Card */}
-        <div className="bg-white/10 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl">
-          
+        <div className="bg-white/10 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl">  
           {/* Thông báo lỗi server */}
           {serverError && (
             <div className="mb-6 flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-xs font-bold animate-in fade-in slide-in-from-top-2">
@@ -61,9 +58,7 @@ export default function Login() {
               {serverError}
             </div>
           )}
-
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            
             {/* Field Tên đăng nhập */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Username</label>
@@ -77,7 +72,6 @@ export default function Login() {
               </div>
               {errors.username && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.username.message}</p>}
             </div>
-
             {/* Field Mật khẩu */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
@@ -99,7 +93,6 @@ export default function Login() {
               </div>
               {errors.password && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.password.message}</p>}
             </div>
-
             {/* Nút Đăng nhập chính */}
             <button 
               type="submit"
@@ -113,14 +106,12 @@ export default function Login() {
               )}
             </button>
           </form>
-
           {/* Đường gạch ngang OR */}
           <div className="flex items-center my-6 gap-4">
             <div className="h-[1px] flex-1 bg-white/5"></div>
             <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Or</span>
             <div className="h-[1px] flex-1 bg-white/5"></div>
           </div>
-
           {/* Nút Google */}
           <button 
             type="button"
@@ -135,7 +126,6 @@ export default function Login() {
             </svg>
             Continue with Google
           </button>
-
           {/* Link chuyển sang Đăng ký */}
           <div className="mt-8 text-center border-t border-white/5 pt-6">
             <p className="text-gray-400 text-sm font-medium">
@@ -146,7 +136,6 @@ export default function Login() {
             </p>
           </div>
         </div>
-        
         <p className="text-center text-gray-600 text-[10px] mt-8 uppercase font-bold tracking-[0.3em]">
           Powered by TD Fitness System v2.0
         </p>

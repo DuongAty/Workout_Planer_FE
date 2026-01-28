@@ -1,13 +1,10 @@
-// src/components/Navbar.jsx
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, User as UserIcon } from 'lucide-react'; // Thêm icon để đẹp hơn
+import { LogOut, User as UserIcon } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
-  // Ảnh mặc định nếu avatar của user là null
   const defaultAvatar = "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff";
   const handleLogout = () => {
     logout();
@@ -19,9 +16,7 @@ export default function Navbar() {
       <Link to="/" className="text-xl font-black text-blue-600 tracking-tighter uppercase">
         WORKOUT PLANNER
       </Link>
-
       <div className="flex items-center gap-4">
-        
         {user ? (
           <div className="flex items-center gap-3 bg-gray-50 pl-2 pr-4 py-1.5 rounded-full border border-gray-100 shadow-sm">
             {/* KHỐI HIỂN THỊ AVATAR */}
@@ -37,7 +32,6 @@ export default function Navbar() {
                 <UserIcon size={20} className="text-gray-400" />
               )}
             </div>
-
             {/* Thông tin User */}
             <div className="text-left hidden sm:block">
               <p className="text-xs font-black text-gray-800 leading-none">
@@ -47,7 +41,6 @@ export default function Navbar() {
                 @{user.username}
               </p>
             </div>
-
             {/* Nút Đăng xuất dạng Icon */}
             <button 
               onClick={handleLogout}

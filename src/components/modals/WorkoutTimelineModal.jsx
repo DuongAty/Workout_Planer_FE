@@ -5,9 +5,7 @@ import toast from 'react-hot-toast';
 
 export default function WorkoutTimelineModal({ isOpen, workout, onClose, onSuccess }) {
   const [processingDate, setProcessingDate] = useState(null);
-
   if (!isOpen || !workout) return null;
-
   const handleToggleStatus = async (item) => {
     if (item.status === 'completed') return;
     try {
@@ -18,7 +16,6 @@ export default function WorkoutTimelineModal({ isOpen, workout, onClose, onSucce
       });
       if (onSuccess) onSuccess();
       onClose();
-      
     } catch (error) {
       console.error("Status update error:", error);
       toast.error("Unable to update training status");
@@ -26,8 +23,6 @@ export default function WorkoutTimelineModal({ isOpen, workout, onClose, onSucce
       setProcessingDate(null);
     }
   };
-
-  // Hàm hỗ trợ hiển thị màu sắc theo status
   const getStatusConfig = (status) => {
     switch (status) {
       case 'completed': 
@@ -42,7 +37,6 @@ export default function WorkoutTimelineModal({ isOpen, workout, onClose, onSucce
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl flex flex-col max-h-[80vh] overflow-hidden">
-        
         {/* Header */}
         <div className="p-6 border-b flex justify-between items-center">
           <h3 className="font-black uppercase tracking-tight text-gray-800">Detailed Timeline</h3>
@@ -50,13 +44,11 @@ export default function WorkoutTimelineModal({ isOpen, workout, onClose, onSucce
             <X size={20} />
           </button>
         </div>
-
         {/* Danh sách Schedule Items */}
         <div className="flex-1 overflow-y-auto p-6 space-y-3">
           {workout.scheduleItems?.sort((a, b) => new Date(a.date) - new Date(b.date)).map((item, index) => {
             const config = getStatusConfig(item.status);
             const isProcessing = processingDate === item.date;
-
             return (
               <button
                 key={index}
@@ -68,7 +60,6 @@ export default function WorkoutTimelineModal({ isOpen, workout, onClose, onSucce
                 <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm ${config.text}`}>
                   {isProcessing ? <Loader2 size={18} className="animate-spin" /> : config.icon}
                 </div>
-                
                 <div className="flex-1 text-left">
                   <p className="text-xs font-black text-gray-900">
                     {new Date(item.date).toLocaleDateString('vi-VN')}
@@ -77,7 +68,6 @@ export default function WorkoutTimelineModal({ isOpen, workout, onClose, onSucce
                     {item.status || 'PLANNED'}
                   </p>
                 </div>
-
                 {item.status !== 'completed' && !isProcessing && (
                   <div className="text-[9px] font-black text-blue-500 uppercase opacity-0 group-hover:opacity-100">
                     Click to complete

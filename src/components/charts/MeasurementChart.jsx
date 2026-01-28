@@ -4,12 +4,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 export default function MeasurementChart({ data }) {
   const formattedData = data.map(item => ({
     ...item,
-    // Định dạng lại ngày để hiển thị ngắn gọn
     displayDate: new Date(item.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
   }));
 
   return (
-    // Chiều cao phải được xác định rõ ràng ở đây
     <div style={{ width: '100%', height: 280 }}> 
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={formattedData}>

@@ -15,16 +15,12 @@ export default function ExerciseTracking() {
   const { exerciseId } = useParams();
   const navigate = useNavigate();
   const API_BASE = import.meta.env.VITE_API_BASE_URL; 
-
-  // States
   const [progressData, setProgressData] = useState(null);
   const [stats, setStats] = useState(null);
   const [timeline, setTimeline] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ weight: '', reps: '', rpe: '' });
-  
-  // Bộ lọc thời gian cho Timeline
-  const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState({
     startDate: '2026-01-01',
     endDate: new Date().toISOString().split('T')[0]
   });
@@ -34,7 +30,6 @@ export default function ExerciseTracking() {
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
-  // Hàm lấy dữ liệu từ 3 API cùng lúc
   const fetchData = useCallback(async () => {
     try {
       const config = { headers: getAuthHeader() };
@@ -53,7 +48,6 @@ export default function ExerciseTracking() {
       console.error("Data loading error:", err.response?.data || err.message);
     }
   }, [exerciseId, filters]);
-  
 
   useEffect(() => {
     if (exerciseId) fetchData();
@@ -91,9 +85,7 @@ export default function ExerciseTracking() {
       >
         <ArrowLeft size={18} /> Back
       </button>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
         {/* CỘT TRÁI: FORM NHẬP LIỆU */}
         <div className="lg:col-span-1">
           <div className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 sticky top-6">
@@ -137,10 +129,8 @@ export default function ExerciseTracking() {
             </form>
           </div>
         </div>
-
         {/* CỘT PHẢI: THỐNG KÊ, BIỂU ĐỒ & LỊCH SỬ */}
         <div className="lg:col-span-2 space-y-8">
-           
            {/* 1. THẺ THỐNG KÊ */}
            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatBox 
@@ -162,7 +152,6 @@ export default function ExerciseTracking() {
                 color="bg-purple-600 text-white" 
               />
            </div>
-
            {/* 2. BIỂU ĐỒ TIẾN TRIỂN (Sử dụng dữ liệu từ getTimelineProgress) */}
            <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm">
               <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
@@ -186,7 +175,6 @@ export default function ExerciseTracking() {
                     />
                 </div>
               </div>
-
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={timeline}>
@@ -228,7 +216,6 @@ export default function ExerciseTracking() {
                 </ResponsiveContainer>
               </div>
            </div>
-
            {/* 3. LỊCH SỬ CHI TIẾT */}
            <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm">
               <h3 className="font-black text-gray-800 uppercase italic mb-8 flex items-center gap-3">
@@ -249,7 +236,6 @@ export default function ExerciseTracking() {
                         </p>
                       </div>
                     </div>
-                    
                     <div className="flex items-center gap-4">
                       {item.rpe && (
                         <span className="text-[9px] font-black bg-purple-100 text-purple-600 px-3 py-1.5 rounded-xl uppercase">RPE {item.rpe}</span>
@@ -261,7 +247,6 @@ export default function ExerciseTracking() {
                     </div>
                   </div>
                 ))}
-
                 {(!progressData?.history || progressData.history.length === 0) && (
                   <div className="py-20 text-center">
                     <p className="text-gray-300 font-black uppercase tracking-[0.2em] text-xs italic">There is no data available in this range.</p>
@@ -274,8 +259,6 @@ export default function ExerciseTracking() {
     </div>
   );
 }
-
-// Sub-component cho các thẻ thống kê
 function StatBox({ icon, label, value, color }) {
   return (
     <div className={`${color} p-6 rounded-[2.5rem] shadow-lg shadow-blue-900/5 transition-transform hover:scale-[1.02]`}>

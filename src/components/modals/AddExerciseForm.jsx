@@ -6,13 +6,10 @@ import toast from 'react-hot-toast';
 export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
   const muscleGroups = ["Ngực", "Lưng", "Vai", "Tay", "Chân", "Mông", "Bụng"];
   const fileInputRef = useRef(null);
-  
   const [loading, setLoading] = useState(false);
-  
   const [formData, setFormData] = useState({
     name: '', muscleGroup: '', numberOfSets: 3, repetitions: 12, restTime: 60, duration: 300, note: ''
   });
-
   const [mediaFile, setMediaFile] = useState(null);
   const [mediaType, setMediaType] = useState('video'); 
   const [previewUrl, setPreviewUrl] = useState('');
@@ -61,7 +58,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     const payload = {
       ...formData,
       numberOfSets: Number(formData.numberOfSets),
@@ -111,11 +107,9 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
           </div>
         </div>
       )}
-
       <h3 className="text-center font-black text-blue-800 uppercase text-xs tracking-[0.3em] mb-8">
         {initialData ? `Editing: ${initialData.name}` : 'Add new exercises to the schedule.'}
       </h3>
-      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-5">
             <div className="flex flex-col">
@@ -127,7 +121,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
                 onChange={e => setFormData({...formData, name: e.target.value})}
               />
             </div>
-
             <div className="flex flex-col">
               <label className="text-[10px] font-black text-gray-400 ml-2 mb-1 uppercase">Muscle Group</label>
               <select 
@@ -140,7 +133,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
                 {muscleGroups.map(g => <option key={g} value={g}>{g}</option>)}
               </select>
             </div>
-
             <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                 <label className="text-[10px] font-black text-gray-400 mb-3 uppercase flex justify-between items-center">
                     <span>Attachments</span>
@@ -161,7 +153,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
                         </button>
                     </div>
                 </label>
-                
                 <input 
                     type="file" 
                     ref={fileInputRef} 
@@ -169,7 +160,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
                     accept={mediaType === 'video' ? "video/*" : "image/*"}
                     onChange={handleFileChange}
                 />
-
                 {!previewUrl ? (
                     <div 
                         onClick={() => fileInputRef.current.click()}
@@ -198,7 +188,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
                 )}
             </div>
         </div>
-
         <div className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -212,7 +201,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
                     value={formData.repetitions} onChange={e => setFormData({...formData, repetitions: e.target.value})} />
                 </div>
             </div>
-
             <div className="grid grid-cols-2 gap-4">
                 <div>
                     <label className="text-[10px] font-black text-gray-400 ml-2 mb-1 uppercase">Rest (s)</label>
@@ -225,7 +213,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
                     value={formData.duration} onChange={e => setFormData({...formData, duration: e.target.value})} />
                 </div>
             </div>
-
             <div>
                 <label className="text-[10px] font-black text-gray-400 ml-2 mb-1 uppercase">Note</label>
                 <textarea 
@@ -237,7 +224,6 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
             </div>
         </div>
       </div>
-
       <button 
         type="submit" 
         disabled={loading}

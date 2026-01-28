@@ -6,7 +6,6 @@ const WorkoutProgressChart = ({ scheduleItems }) => {
     return <div className="text-[10px] font-bold text-gray-300 uppercase">No Data</div>;
   }
 
-  // 1. Tính toán số lượng từng trạng thái
   const total = scheduleItems.length;
   const counts = scheduleItems.reduce((acc, item) => {
     const status = item.status || 'planned';
@@ -14,11 +13,10 @@ const WorkoutProgressChart = ({ scheduleItems }) => {
     return acc;
   }, {});
 
-  // 2. Định dạng dữ liệu cho biểu đồ
   const data = [
-    { name: 'Completed', value: counts.completed || 0, color: '#10b981' }, // Xanh lá
-    { name: 'Planned', value: counts.planned || 0, color: '#3b82f6' },   // Xanh dương
-    { name: 'Missed', value: counts.missed || 0, color: '#ef4444' }      // Đỏ
+    { name: 'Completed', value: counts.completed || 0, color: '#10b981' },
+    { name: 'Planned', value: counts.planned || 0, color: '#3b82f6' }, 
+    { name: 'Missed', value: counts.missed || 0, color: '#ef4444' }
   ].filter(d => d.value > 0); // Chỉ hiển thị phần có giá trị > 0
 
   const completedPercent = Math.round(((counts.completed || 0) / total) * 100);
@@ -43,13 +41,11 @@ const WorkoutProgressChart = ({ scheduleItems }) => {
             </Pie>
           </PieChart>
         </ResponsiveContainer>
-        
         {/* Con số % ở giữa */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <span className="text-[8px] font-black text-gray-800">{completedPercent}%</span>
         </div>
       </div>
-
       {/* Chú thích nhỏ bên cạnh */}
       <div className="flex flex-col gap-0.5">
         {data.map((item, idx) => (
@@ -64,6 +60,4 @@ const WorkoutProgressChart = ({ scheduleItems }) => {
     </div>
   );
 };
-
-// DÒNG QUAN TRỌNG NHẤT: Sửa lỗi "export default"
 export default WorkoutProgressChart;
