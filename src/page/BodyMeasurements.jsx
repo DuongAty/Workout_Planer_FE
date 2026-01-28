@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { MUSCLE_GROUPS } from '../common/constants';
 
 // Constants
-const MUSCLE_GROUPS = ["Ngực", "Lưng", "Vai", "Tay", "Chân", "Mông", "Bụng"];
 
 export default function BodyMeasurements() {
   const [selectedGroup, setSelectedGroup] = useState('Ngực');

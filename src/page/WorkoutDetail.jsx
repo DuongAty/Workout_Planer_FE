@@ -12,9 +12,9 @@ import AddExerciseForm from '../components/modals/AddExerciseForm';
 import VideoModal from '../components/modals/VideoModal';
 import StepManagerModal from '../components/modals/StepManagerModal';
 import toast from 'react-hot-toast';
+import { MUSCLE_GROUPS } from '../common/constants';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-const MUSCLE_GROUPS = ["Ngực", "Lưng", "Tay", "Vai", "Chân", "Mông", "Bụng"];
 
 const StatItem = memo(({ label, value }) => (
   <div className="flex flex-col items-center justify-center text-center px-1 min-w-0 w-full">

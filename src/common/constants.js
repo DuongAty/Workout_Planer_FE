@@ -13,3 +13,5 @@ export const formatDate = (date) => {
   const d = new Date(date);
   return isNaN(d.getTime()) ? "--/--/----" : d.toLocaleDateString('vi-VN');
 };
+
+export const MUSCLE_GROUPS = ["Ngực", "Lưng", "Tay", "Vai", "Chân", "Mông", "Bụng"];
