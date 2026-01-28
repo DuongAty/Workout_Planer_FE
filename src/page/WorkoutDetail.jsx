@@ -51,7 +51,7 @@ export default function WorkoutDetail() {
       });
       setWorkoutPlan(res.data);
     } catch (err) {
-      toast.error("Không thể tải thông tin bài tập!");
+      toast.error("Unable to load assignment information!");
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,7 @@ export default function WorkoutDetail() {
 
   const handleCompleteToday = async () => {
     if (!workoutPlan || !workoutPlan.scheduleItems || workoutPlan.scheduleItems.length === 0) {
-      toast.error("Không tìm thấy lịch tập!"); 
+      toast.error("No training schedule found!"); 
       return;
     }
     const todayStr = new Date().toLocaleDateString('en-CA'); 
@@ -73,22 +73,22 @@ export default function WorkoutDetail() {
 
     if (todayItem) {
       if (todayItem.status === 'completed') {
-        toast.success("Bạn đã hoàn thành buổi tập hôm nay rồi!", { icon: '👏' });
+        toast.success("You've completed your workout for today!", { icon: '👏' });
         return;
       }
       try {
         setLoading(true);
         await workoutApi.updateItemStatus(todayItem.id, { status: 'completed' });
-        toast.success("Tuyệt vời! Đã hoàn thành mục tiêu hôm nay.");
+        toast.success("Great! I've accomplished my goal for today.");
         await fetchDetail();
         navigate('/dashboard');
       } catch (err) {
-        toast.error("Lỗi kết nối khi cập nhật trạng thái.");
+        toast.error("Connection error while updating status.");
       } finally {
         setLoading(false);
       }
     } else {
-      toast("Hôm nay không có lịch tập cho bài này.", { icon: '📅' });
+      toast("There is no workout scheduled for this exercise today.", { icon: '📅' });
     }
   };
 
@@ -99,7 +99,7 @@ export default function WorkoutDetail() {
       const res = await stepOfExerciseApi.getByExercise(exerciseId); 
       setStepsMap(prev => ({ ...prev, [exerciseId]: res.data }));
     } catch (err) {
-      toast.error("Không thể tải các bước hướng dẫn!");
+      toast.error("Unable to load the instructions!");
     } finally {
       setStepsLoading(prev => ({ ...prev, [exerciseId]: false }));
     }
@@ -121,12 +121,12 @@ export default function WorkoutDetail() {
   };
 
   const handleDeleteEx = async (exId) => {
-    if (!window.confirm("Bạn có chắc chắn muốn xóa bài tập này?")) return;
+    if (!window.confirm("Are you sure you want to delete this assignment?")) return;
     try {
       await exerciseApi.delete(exId);
-      toast.success("Đã xóa bài tập");
+      toast.success("Assignment deleted");
       fetchDetail();
-    } catch (err) { toast.error("Lỗi khi xóa!"); }
+    } catch (err) { toast.error("Error deleting!"); }
   };
 
   return (
