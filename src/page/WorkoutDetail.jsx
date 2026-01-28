@@ -276,7 +276,7 @@ export default function WorkoutDetail() {
                       </div>
                       <div className="space-y-3">
                         <h4 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] flex items-center gap-2"><BookOpen size={14} /> Exercise Notes</h4>
-                        <div className="bg-white p-5 rounded-3xl border border-gray-100 text-sm text-gray-600 italic shadow-sm border-l-4 border-l-blue-400 break-all">{ex.note || "No specific notes."}</div>
+                        <div className="bg-white p-5 rounded-3xl border border-gray-100 text-sm text-gray-600 italic shadow-sm border-l-4 border-l-blue-400 whitespace-pre-line">{ex.note || "No specific notes."}</div>
                       </div>
                     </div>
                   </div>
