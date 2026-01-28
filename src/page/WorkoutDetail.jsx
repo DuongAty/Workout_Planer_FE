@@ -37,10 +37,8 @@ export default function WorkoutDetail() {
   const [expandedId, setExpandedId] = useState(null);
   const [stepsMap, setStepsMap] = useState({}); 
   const [stepsLoading, setStepsLoading] = useState({});
-
   const [filters, setFilters] = useState({ search: '', muscleGroup: '', duration: '' });
   const [debouncedSearch] = useDebounce(filters.search, 500);
-
   const fetchDetail = useCallback(async () => {
     try {
       setLoading(true);
@@ -56,7 +54,6 @@ export default function WorkoutDetail() {
       setLoading(false);
     }
   }, [id, debouncedSearch, filters.muscleGroup, filters.duration]);
-
   useEffect(() => { fetchDetail(); }, [fetchDetail]);
 
   const handleCompleteToday = async () => {
@@ -131,7 +128,6 @@ export default function WorkoutDetail() {
 
   return (
     <div className="max-w-5xl mx-auto p-6 animate-in fade-in duration-500 text-slate-900 pb-20">
-      
       {/* BACK BUTTON */}
       <button onClick={() => navigate('/dashboard')} className="group flex items-center gap-2 text-gray-400 hover:text-blue-600 font-bold transition-all mb-8">
         <div className="p-2 rounded-xl bg-gray-50 group-hover:bg-blue-50 transition-colors">
@@ -139,7 +135,6 @@ export default function WorkoutDetail() {
         </div>
         <span className="text-[10px] uppercase tracking-[0.2em]">Back to Dashboard</span>
       </button>
-
       {/* HEADER */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
         <div className="min-w-0 flex-1">
@@ -150,7 +145,6 @@ export default function WorkoutDetail() {
             Total: {workoutPlan?.numExercises || 0} Exercises
           </p>
         </div>
-        
         <div className="flex flex-wrap gap-3 w-full md:w-auto flex-shrink-0">
           <button 
             onClick={() => handleToggleForm()} 
@@ -174,7 +168,6 @@ export default function WorkoutDetail() {
           />
         </div>
       )}
-
       {/* FILTERS */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 bg-white/50 p-2 rounded-[2.5rem] border border-gray-100 shadow-sm">
         <div className="relative">
@@ -193,7 +186,6 @@ export default function WorkoutDetail() {
           <input name="duration" type="number" placeholder="Duration..." value={filters.duration} onChange={(e) => setFilters({...filters, duration: e.target.value})} className="w-full pl-14 pr-6 py-4 bg-gray-50 border-none rounded-[2rem] outline-none text-sm font-bold" />
         </div>
       </section>
-
       {/* LIST */}
       <section className="space-y-6 mb-12">
         {loading && !workoutPlan ? (
@@ -207,7 +199,6 @@ export default function WorkoutDetail() {
                   <div className="relative w-32 h-32 bg-gray-50 rounded-[2.5rem] flex-shrink-0 flex items-center justify-center overflow-hidden">
                     {ex.thumbnail ? <img src={`${API_URL}/${ex.thumbnail}`} className="w-full h-full object-cover" alt={ex.name} /> : <Dumbbell size={40} className="text-gray-200" />}
                   </div>
-
                   <div className="flex-1 min-w-0 w-full">
                     <div className="flex justify-between items-start mb-4 w-full gap-4">
                       <div className="flex flex-col gap-2 min-w-0">
@@ -225,7 +216,6 @@ export default function WorkoutDetail() {
                         <div className="flex flex-col items-center gap-1"><LineChart size={24} /><span className="text-[8px] font-black uppercase tracking-tighter">Progress</span></div>
                       </button>
                     </div>
-
                     <div className="grid grid-cols-5 gap-1 bg-gray-50/80 p-4 rounded-[2rem] items-center">
                       <StatItem label="Sets" value={ex.numberOfSets} />
                       <StatItem label="Reps" value={ex.repetitions} />
@@ -243,7 +233,6 @@ export default function WorkoutDetail() {
                     </div>
                   </div>
                 </div>
-
                 {isExpanded && (
                   <div className="px-8 pb-8 animate-in slide-in-from-top duration-300">
                     <div className="flex flex-col gap-8 bg-slate-50/50 p-6 rounded-[2.5rem] border border-gray-100">
@@ -276,7 +265,7 @@ export default function WorkoutDetail() {
                       </div>
                       <div className="space-y-3">
                         <h4 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] flex items-center gap-2"><BookOpen size={14} /> Exercise Notes</h4>
-                        <div className="bg-white p-5 rounded-3xl border border-gray-100 text-sm text-gray-600 italic shadow-sm border-l-4 border-l-blue-400 break-all">{ex.note || "No specific notes."}</div>
+                        <div className="bg-white p-5 rounded-3xl border border-gray-100 text-sm text-gray-600 italic shadow-sm border-l-4 border-l-blue-400 whitespace-pre-line">{ex.note || "No specific notes."}</div>
                       </div>
                     </div>
                   </div>
@@ -286,7 +275,6 @@ export default function WorkoutDetail() {
           })
         )}
       </section>
-
       {/* NEW FOOTER ACTION SECTION */}
       {!loading && workoutPlan && (
         <div className="flex flex-col items-center gap-4 mt-12 animate-in fade-in slide-in-from-bottom duration-700">
@@ -300,7 +288,6 @@ export default function WorkoutDetail() {
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Mark this plan as finished for today</p>
         </div>
       )}
-
       {/* MODALS */}
       <VideoModal isOpen={!!selectedVideo} videoUrl={selectedVideo} exerciseId={selectedExercise?.id} exerciseName={selectedExercise?.name} onClose={() => setSelectedVideo(null)} />
       {showStepModal && selectedExercise && (
@@ -314,7 +301,6 @@ export default function WorkoutDetail() {
           }} 
         />
       )}
-
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }

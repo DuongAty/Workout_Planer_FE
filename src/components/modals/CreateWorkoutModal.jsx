@@ -29,19 +29,14 @@ export default function CreateWorkoutModal({ isOpen, onClose, onSuccess }) {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
   const selectedEnd = new Date(formData.endDate);
   selectedEnd.setHours(0, 0, 0, 0);
-
-  // Validation logic
   if (selectedEnd < today) {
     toast.error(`The end date cannot be a date in the past. (before ${today.toLocaleDateString('vi-VN')})!`);
     return;
   }
-
   try {
     await workoutApi.create(formData);
     onSuccess();
@@ -58,7 +53,6 @@ const handleSubmit = async (e) => {
           <h2 className="text-xl font-black uppercase tracking-tighter">Create new workout</h2>
           <button onClick={onClose}><X /></button>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Workout Name</label>
@@ -69,7 +63,6 @@ const handleSubmit = async (e) => {
               onChange={e => setFormData({...formData, name: e.target.value})}
             />
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Start</label>
@@ -88,7 +81,6 @@ const handleSubmit = async (e) => {
               />
             </div>
           </div>
-
           <div>
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Days of the week</label>
             <div className="flex justify-between gap-1">
@@ -105,7 +97,6 @@ const handleSubmit = async (e) => {
               ))}
             </div>
           </div>
-
           <button className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-lg shadow-blue-200">
             CREATE NOW
           </button>

@@ -77,7 +77,6 @@ export default function RescheduleItemModal({ isOpen, workout, onClose, onSucces
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 font-sans">
       <div className="bg-white w-full max-w-3xl rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col md:flex-row min-h-[500px]">
-        
         {/* BÊN TRÁI: BỘ LỊCH TƯƠNG TÁC */}
         <div className="flex-1 p-8 bg-gray-50 border-r border-gray-100">
           <div className="flex items-center gap-3 mb-6">
@@ -86,15 +85,13 @@ export default function RescheduleItemModal({ isOpen, workout, onClose, onSucces
               {mode === 'selectSource' ? 'Select the date to reschedule.' : 'Choose a new date'}
             </h3>
           </div>
-          
           <Calendar
             onChange={handleCalendarChange}
             tileClassName={tileClassName}
-            tileDisabled={tileDisabled} // Ngăn chọn ngày không có lịch khi ở mode selectSource
+            tileDisabled={tileDisabled}
             className="border-none bg-transparent rounded-2xl w-full"
             locale="vi-VN"
           />
-          
           <div className="mt-6 flex items-center gap-4 text-[10px] font-bold text-gray-400">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -110,13 +107,11 @@ export default function RescheduleItemModal({ isOpen, workout, onClose, onSucces
             </div>
           </div>
         </div>
-
         {/* BÊN PHẢI: CHI TIẾT LỰA CHỌN */}
         <div className="flex-1 p-10 flex flex-col justify-center relative">
           <button onClick={onClose} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors">
             <X size={20} className="text-gray-400" />
           </button>
-
           <div className="space-y-6">
             {/* Mục chọn ngày cũ */}
             <div 
@@ -132,7 +127,6 @@ export default function RescheduleItemModal({ isOpen, workout, onClose, onSucces
                 {formData.oldDate ? new Date(formData.oldDate).toLocaleDateString('vi-VN') : "CHƯA CHỌN"}
               </p>
             </div>
-
             {/* Mục chọn ngày mới */}
             <div 
               onClick={() => setMode('selectTarget')}
@@ -147,7 +141,6 @@ export default function RescheduleItemModal({ isOpen, workout, onClose, onSucces
                 {formData.newDate ? new Date(formData.newDate).toLocaleDateString('vi-VN') : "dd/mm/yyyy"}
               </p>
             </div>
-
             <button 
               onClick={handleSubmit}
               disabled={isSubmitting || !formData.oldDate || !formData.newDate}

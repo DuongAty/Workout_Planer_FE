@@ -10,7 +10,6 @@ export default function Register() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
@@ -20,7 +19,6 @@ export default function Register() {
         username: data.username,
         password: data.password
       });
-
       toast.success("Congratulations! You have successfully registered.");
       navigate('/login');
     } catch (error) {
@@ -36,11 +34,11 @@ export default function Register() {
       {/* Hiệu ứng nền Blur Orbs */}
       <div className="absolute top-0 -left-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-0 -right-20 w-96 h-96 bg-emerald-600/20 rounded-full blur-[120px]" />
-
       <div className="w-full max-w-md relative z-10">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div onClick={() => navigate('/')} className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/30 -rotate-3 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95">
+          <div onClick={() => navigate('/')} 
+          className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/30 -rotate-3 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95">
             <Dumbbell className="text-white" size={28} />
           </div>
           <h1 className="text-3xl font-black text-white uppercase tracking-tighter">
@@ -50,11 +48,9 @@ export default function Register() {
             Professional Training Management System
           </p>
         </div>
-
         {/* Card Đăng Ký */}
         <div className="bg-white/10 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            
             {/* Họ và tên */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
@@ -68,7 +64,6 @@ export default function Register() {
                 />
               </div>
             </div>
-
             {/* Tên đăng nhập */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Username</label>
@@ -82,7 +77,6 @@ export default function Register() {
                 />
               </div>
             </div>
-
             {/* Mật khẩu */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
@@ -104,7 +98,6 @@ export default function Register() {
                 </button>
               </div>
             </div>
-
             {/* Nút Submit */}
             <button 
               disabled={isSubmitting}
@@ -121,7 +114,6 @@ export default function Register() {
               )}
             </button>
           </form>
-
           {/* Footer Card */}
           <div className="mt-8 text-center border-t border-white/5 pt-6">
             <p className="text-gray-400 text-sm font-medium">

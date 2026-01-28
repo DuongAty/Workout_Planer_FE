@@ -8,8 +8,6 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { MUSCLE_GROUPS } from '../common/constants';
 
-// Constants
-
 export default function BodyMeasurements() {
   const [selectedGroup, setSelectedGroup] = useState('Ngực');
   const [chartData, setChartData] = useState([]);
@@ -17,19 +15,15 @@ export default function BodyMeasurements() {
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [newValue, setNewValue] = useState('');
-  
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
-
-  // Lazy initializer cho dateRange để tránh tính toán lại mỗi lần render
   const [dateRange, setDateRange] = useState(() => {
     const end = new Date();
     const start = new Date();
-    start.setMonth(start.getMonth() - 1); // 1 tháng trước một cách chính xác
+    start.setMonth(start.getMonth() - 1);
     return [start, end];
   });
 
-  // Đóng lịch khi nhấn ra ngoài
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
@@ -40,22 +34,18 @@ export default function BodyMeasurements() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Tách biệt logic format date
   const formatDateForApi = (date) => date.toISOString().split('T')[0];
 
   const loadData = useCallback(async () => {
     if (!dateRange[0] || !dateRange[1]) return;
-    
     setLoading(true);
     try {
       const startDate = formatDateForApi(dateRange[0]);
       const endDate = formatDateForApi(dateRange[1]);
-      
       const [chartRes, progRes] = await Promise.all([
         measurementApi.getChartData(selectedGroup, startDate, endDate),
         measurementApi.getLatestProgress(selectedGroup)
       ]);
-      
       setChartData(chartRes.data || []);
       setProgress(progRes.data || null);
     } catch (err) {
@@ -91,7 +81,6 @@ export default function BodyMeasurements() {
     }
   };
 
-  // Tính toán hiển thị Diff một cách sạch sẽ
   const diffDisplay = useMemo(() => {
     if (!progress || progress.diff === undefined) return null;
     const isPositive = progress.diff > 0;
@@ -129,7 +118,6 @@ export default function BodyMeasurements() {
           </nav>
         </div>
       </header>
-
       <main className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Input Form */}
         <section className="bg-white p-6 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-4 hover:shadow-md transition-shadow">
@@ -155,7 +143,6 @@ export default function BodyMeasurements() {
             </button>
           </form>
         </section>
-
         {/* Highlight Progress Card */}
         <section className="md:col-span-2 bg-gradient-to-br from-blue-600 to-blue-700 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
           <div className="absolute -right-10 -bottom-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
@@ -180,14 +167,12 @@ export default function BodyMeasurements() {
           </div>
         </section>
       </main>
-
       {/* History & Chart Section */}
       <section className="space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2 italic">
             <TrendingUp size={14} /> Analysis & History
           </h3>
-          
           <div className="relative" ref={calendarRef}>
             <button 
               onClick={() => setShowCalendar(!showCalendar)}
@@ -201,7 +186,6 @@ export default function BodyMeasurements() {
               </div>
               <CalendarIcon size={18} className="text-blue-600" />
             </button>
-
             {showCalendar && (
               <div className="absolute right-0 top-full mt-2 z-50 bg-white p-4 rounded-3xl shadow-2xl border border-gray-100 min-w-[320px] animate-in zoom-in-95 duration-200">
                 <div className="flex justify-between items-center mb-4 px-2">
@@ -221,7 +205,6 @@ export default function BodyMeasurements() {
             )}
           </div>
         </div>
-
         <div className="min-h-[400px] w-full bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm relative overflow-hidden">
           {loading ? (
             <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-[2px] z-20">

@@ -5,29 +5,22 @@ import { useAuth } from '../context/AuthContext';
 export default function GoogleCallback() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setAuthData } = useAuth(); // Giả sử hàm này dùng để lưu user/token vào state
+  const { setAuthData } = useAuth();
 
   useEffect(() => {
-    // 1. Lấy đúng key từ URL (Phải khớp với res.redirect ở Backend)
     const params = new URLSearchParams(location.search);
     const accessToken = params.get('accessToken');
     const refreshToken = params.get('refreshToken');
 
     if (accessToken && refreshToken) {
-      // 2. Lưu vào LocalStorage để duy trì phiên đăng nhập khi F5
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
-
-      // 3. Cập nhật vào AuthContext để UI thay đổi ngay lập tức (ẩn nút Login, hiện Avatar)
       if (setAuthData) {
         setAuthData({ accessToken, refreshToken, isAuthenticated: true });
       }
       console.log('Authentication successful!');
-      
-      // 4. Điều hướng về Dashboard
-      navigate('/dashboard');
+            navigate('/dashboard');
     } else {
-      // Nếu thiếu token, coi như lỗi
       console.error('Token not found in URL');
       navigate('/login?error=auth_failed');
     }
