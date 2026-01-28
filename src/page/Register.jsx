@@ -40,7 +40,7 @@ export default function Register() {
       <div className="w-full max-w-md relative z-10">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/30 rotate-3">
+          <div onClick={() => navigate('/')} className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/30 -rotate-3 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95">
             <Dumbbell className="text-white" size={28} />
           </div>
           <h1 className="text-3xl font-black text-white uppercase tracking-tighter">

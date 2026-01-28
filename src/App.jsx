@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { HashRouter as Router } from 'react-router-dom';
 import Navbar from './components/layouts/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './page/Dashboard';
@@ -13,42 +12,62 @@ import ExerciseTracking from './components/ExerciseTracking';
 import BodyMeasurements from './page/BodyMeasurements';
 import { Toaster } from 'react-hot-toast';
 
-// Component phụ trợ để quyết định trang chủ hiển thị gì
-const HomeRedirect = () => {
-  const { user, loading } = useAuth();
-  
-  if (loading) return <div>Loading...</div>;
-  return user ? <Dashboard /> : <Navigate to="/login" replace />;
-};
+// Component bao bọc Layout chính (Có Navbar và Container)
+const MainLayout = ({ children }) => (
+  <div className="min-h-screen bg-gray-50">
+    <Navbar />
+    <main className="container mx-auto py-6 px-4">
+      {children}
+    </main>
+  </div>
+);
 
 export default function App() {
   return (
     <AuthProvider>
       <Toaster position="top-right" reverseOrder={false} />
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <main className="container mx-auto py-6 px-4">
-          <Routes>
-            {/* Route trang chủ: Tự điều hướng dựa trên auth */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/auth/google/callback" element={<GoogleCallback />} />
-            <Route path="/tracking/:exerciseId" element={<ExerciseTracking />} />
-            <Route path="/measurements" element={<BodyMeasurements />} />
-            {/* Các trang yêu cầu bảo mật */}
-            <Route 
-              path="/workout/:id" 
-              element={
-                <ProtectedRoute>
-                  <WorkoutDetail />
-                </ProtectedRoute>
-              } 
-            />
-          </Routes>
-        </main>
-      </div>
+      
+      <Routes>
+        {/* NHÓM 1: Các trang FULL SCREEN (Không có Navbar/Container) */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
+        <Route path="/" element={<MainLayout><LandingPage /></MainLayout>} />
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <MainLayout><Dashboard /></MainLayout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/workout/:id" 
+          element={
+            <ProtectedRoute>
+              <MainLayout><WorkoutDetail /></MainLayout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/tracking/:exerciseId" 
+          element={
+            <ProtectedRoute>
+              <MainLayout><ExerciseTracking /></MainLayout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/measurements" 
+          element={
+            <ProtectedRoute>
+              <MainLayout><BodyMeasurements /></MainLayout>
+            </ProtectedRoute>
+          } 
+        />
+        {/* Điều hướng mặc định cho các route không tồn tại */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </AuthProvider>
   );
 }
