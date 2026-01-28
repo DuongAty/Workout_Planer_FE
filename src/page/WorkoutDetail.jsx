@@ -160,6 +160,20 @@ export default function WorkoutDetail() {
           </button>
         </div>
       </header>
+      {formState.show && (
+        <div className="mb-12 p-8 bg-white rounded-[3rem] border-2 border-dashed border-blue-200 shadow-inner animate-in slide-in-from-top duration-500">
+          <AddExerciseForm 
+            workoutId={id} 
+            initialData={formState.editing}
+            onAdded={() => {
+              setFormState({ show: false, editing: null });
+              fetchDetail();
+              toast.success(formState.editing ? "Cập nhật thành công!" : "Thêm bài tập thành công!");
+            }}
+            onCancel={() => setFormState({ show: false, editing: null })}
+          />
+        </div>
+      )}
 
       {/* FILTERS */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 bg-white/50 p-2 rounded-[2.5rem] border border-gray-100 shadow-sm">
