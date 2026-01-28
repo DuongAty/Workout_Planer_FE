@@ -14,7 +14,7 @@ import StepManagerModal from '../components/modals/StepManagerModal';
 import toast from 'react-hot-toast';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
-const MUSCLE_GROUPS = ["Ngực", "Lưng", "Vai", "Chân", "Mông", "Bụng"];
+const MUSCLE_GROUPS = ["Ngực", "Lưng", "Tay", "Vai", "Chân", "Mông", "Bụng"];
 
 const StatItem = memo(({ label, value }) => (
   <div className="flex flex-col items-center justify-center text-center px-1 min-w-0 w-full">
