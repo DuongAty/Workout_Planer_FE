@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { workoutApi } from '../api/endpoints';
+import { Link, useNavigate } from 'react-router-dom';
+import { workoutApi, authApi } from '../api/endpoints';
 import { 
   Trash2, Dumbbell, ChevronRight, LayoutGrid, 
-  CalendarDays, Search, Loader2, Hash, 
-  CalendarRange, Activity, PencilLine,
-  CalendarSync, Plus, X, Clock
+  Search, Loader2, Hash, CalendarRange, Activity, 
+  Plus, X, Clock, Utensils, AlertCircle, 
+  Sparkles, Send, MessageSquare, Bot
 } from 'lucide-react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -18,6 +18,7 @@ import { formatDate, INITIAL_FILTERS, DEBOUNCE_DELAY } from '../common/constants
 import { WorkoutCard } from '../components/WorkoutCard';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -26,9 +27,39 @@ export default function Dashboard() {
   const calendarRef = useRef(null);
   const [hasMore, setHasMore] = useState(true);
   const [filters, setFilters] = useState({ ...INITIAL_FILTERS, todayOnly: '' });
+
+  // State cho User và Thông báo
+  const [user, setUser] = useState(null);
+  const [showProfileWarning, setShowProfileWarning] = useState(false);
+  
+  // State cho AI Chatbox
+  const [isAiOpen, setIsAiOpen] = useState(false);
+  const [aiMessage, setAiMessage] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const getTodayString = () => new Date().toISOString().split('T')[0];
 
-  // Click outside calendar
+  // 1. Kiểm tra User Profile ngay khi mount
+  useEffect(() => {
+    const fetchUserAndCheckProfile = async () => {
+      try {
+        const res = await authApi.getMe();
+        const userData = res.data;
+        setUser(userData);
+
+        // Kiểm tra các trường thông tin quan trọng
+        const { age, gender, goal, height, weight } = userData;
+        if (age === null || gender === null || goal === null || height === null || weight === null) {
+          setShowProfileWarning(true);
+        }
+      } catch (err) {
+        console.error("Lỗi lấy thông tin người dùng:", err);
+      }
+    };
+    fetchUserAndCheckProfile();
+  }, []);
+
+  // 2. Click outside để đóng lịch
   useEffect(() => {
     const handler = (e) => {
       if (calendarRef.current && !calendarRef.current.contains(e.target)) setShowCalendar(false);
@@ -80,6 +111,25 @@ export default function Dashboard() {
     return () => clearTimeout(handler);
   }, [filters.search, filters.numExercises, filters.startDate, filters.endDate, filters.todayOnly, loadData]);
 
+  // 4. Xử lý yêu cầu AI
+  const handleAiGenerate = async (e) => {
+    e.preventDefault();
+    if (!aiMessage.trim()) return;
+
+    try {
+      setIsGenerating(true);
+      await workoutApi.createByAi({ message: aiMessage }); 
+      toast.success("AI đã tạo lịch tập mới cho bạn!");
+      setAiMessage("");
+      setIsAiOpen(false);
+      loadData({ ...filters, page: 1 }, false); 
+    } catch (err) {
+      toast.error("AI gặp lỗi khi xử lý yêu cầu.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value, page: 1 }));
@@ -120,10 +170,85 @@ export default function Dashboard() {
   const closeModal = () => setActiveModal({ type: null, data: null });
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] p-6 md:p-10 font-sans">
+    <div className="min-h-screen bg-[#FDFDFD] p-6 md:p-10 font-sans relative">
+      
+      {/* POPUP CẢNH BÁO THIẾU THÔNG TIN HỒ SƠ */}
+      {showProfileWarning && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl border-4 border-orange-500/10">
+            <div className="flex flex-col items-center text-center space-y-5">
+              <div className="p-4 bg-orange-50 rounded-3xl text-orange-500">
+                <AlertCircle size={48} strokeWidth={2.5} className="animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-black text-gray-900 uppercase italic tracking-tight">Cần cập nhật hồ sơ</h3>
+                <p className="text-gray-500 font-bold text-xs mt-2 leading-relaxed uppercase tracking-wider">
+                  Chào {user?.fullname || 'bạn'}, bạn cần bổ sung các thông tin (Tuổi, Giới tính, Cân nặng...) để hệ thống tính toán lộ trình chính xác nhất.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 w-full mt-4">
+                <button 
+                  onClick={() => navigate(`/profile/${user?.id}`)}
+                  className="w-full bg-orange-500 text-white px-6 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg shadow-orange-100 flex items-center justify-center gap-2"
+                >
+                  Cập nhật ngay <ChevronRight size={16} />
+                </button>
+                <button 
+                  onClick={() => setShowProfileWarning(false)}
+                  className="w-full px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-all"
+                >
+                  Để sau
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI ASSISTANT FLOATING CHATBOX */}
+      <div className="fixed bottom-8 right-8 z-[60] flex flex-col items-end gap-4">
+        {isAiOpen && (
+          <div className="w-[350px] bg-white rounded-[2.5rem] shadow-2xl border border-blue-100 overflow-hidden animate-in slide-in-from-bottom-10 duration-300">
+            <div className="bg-blue-600 p-5 text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-lg"><Bot size={20} /></div>
+                <span className="font-black text-[11px] uppercase tracking-widest italic"></span>
+              </div>
+              <button onClick={() => setIsAiOpen(false)} className="hover:rotate-90 transition-transform"><X size={20} /></button>
+            </div>
+            <form onSubmit={handleAiGenerate} className="p-5 space-y-4">
+              <div className="bg-blue-50/50 p-3 rounded-2xl border border-blue-100">
+                <p className="text-[10px] font-bold text-blue-600 uppercase tracking-tight">Yêu cầu AI (Ví dụ: "Tạo lịch 3 ngày tập bụng tại nhà cho nữ")</p>
+              </div>
+              <textarea 
+                value={aiMessage}
+                onChange={(e) => setAiMessage(e.target.value)}
+                placeholder="Nhập yêu cầu của bạn..."
+                className="w-full h-28 p-4 bg-gray-50 rounded-2xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 resize-none border-none"
+              />
+              <button 
+                type="submit"
+                disabled={isGenerating || !aiMessage.trim()}
+                className="w-full bg-gray-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors disabled:opacity-50 shadow-lg"
+              >
+                {isGenerating ? <Loader2 className="animate-spin" size={16} /> : <Sparkles size={16} />}
+                {isGenerating ? "Đang khởi tạo..." : "Tạo lịch tập ngay"}
+              </button>
+            </form>
+          </div>
+        )}
+        
+        <button 
+          onClick={() => setIsAiOpen(!isAiOpen)}
+          className={`p-5 rounded-[2rem] shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-3 ${isAiOpen ? 'bg-gray-900 text-white' : 'bg-blue-600 text-white'}`}
+        >
+          {isAiOpen ? <X size={24} /> : <><Sparkles size={24} /> <span className="font-black text-[11px] uppercase tracking-widest pr-2">AI</span></>}
+        </button>
+      </div>
+
       <div className="max-w-7xl mx-auto">
-        {/* HEADER */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+        {/* HEADER SECTION */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-600 rounded-lg text-white shadow-lg">
@@ -135,11 +260,15 @@ export default function Dashboard() {
               TODAY: {formatDate(new Date())}
             </p>
           </div>
-          <div className="flex gap-3">
-            <Link to="/measurements" className="flex items-center gap-2 bg-white border-2 border-gray-900 text-gray-900 px-6 py-4 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all hover:bg-gray-50 shadow-sm">
-              <Activity size={16} strokeWidth={3} /> Body Measurements
+          
+          <div className="flex flex-wrap gap-3 w-full md:w-auto">
+            <Link to="/calories" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border-2 border-gray-900 text-gray-900 px-6 py-4 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 shadow-sm group">
+              <Utensils size={16} strokeWidth={3} className="group-hover:rotate-12 transition-transform" /> Calories
             </Link>
-            <button onClick={() => setActiveModal({ type: 'CREATE' })} className="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] flex items-center justify-center gap-2 uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+            <Link to="/measurements" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border-2 border-gray-900 text-gray-900 px-6 py-4 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all hover:bg-gray-50 shadow-sm">
+              <Activity size={16} strokeWidth={3} /> Measurements
+            </Link>
+            <button onClick={() => setActiveModal({ type: 'CREATE' })} className="w-full md:w-auto bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] flex items-center justify-center gap-2 uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
               <Plus size={18} /> Create
             </button>
           </div>
@@ -166,29 +295,13 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-          {/* NÚT LỌC TODAY NHỎ GỌN */}
-          <button 
-            onClick={toggleTodayFilter}
-            className={`flex-none flex items-center justify-center gap-2 py-2.5 px-5 rounded-xl text-[10px] font-black transition-all border-2 ${
-              filters.todayOnly !== '' 
-              ? 'bg-orange-500 border-orange-500 text-white shadow-md shadow-orange-100' 
-              : 'bg-white border-gray-100 text-gray-400 hover:border-orange-200 hover:text-orange-500'
-            }`}
-          >
-            <Clock size={14} className={filters.todayOnly !== '' ? 'animate-pulse' : ''} />
-            TODAY
+
+          <button onClick={toggleTodayFilter} className={`flex-none flex items-center justify-center gap-2 py-2.5 px-5 rounded-xl text-[10px] font-black transition-all border-2 ${filters.todayOnly !== '' ? 'bg-orange-500 border-orange-500 text-white shadow-md shadow-orange-100' : 'bg-white border-gray-100 text-gray-400 hover:border-orange-200 hover:text-orange-500'}`}>
+            <Clock size={14} className={filters.todayOnly !== '' ? 'animate-pulse' : ''} /> TODAY
           </button>
         </div>
-        {/* Trạng thái filter active */}
-        {filters.todayOnly !== '' && (
-          <div className="mb-6 flex items-center gap-2 px-2 animate-in fade-in slide-in-from-left duration-300">
-            <div className="w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
-            <span className="text-[9px] font-black text-orange-600 uppercase tracking-widest">
-              Filtering for date: {filters.todayOnly}
-            </span>
-          </div>
-        )}
-        {/* GRID */}
+
+        {/* WORKOUT GRID */}
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="animate-spin text-blue-600" size={48} /></div>
         ) : (
@@ -217,15 +330,7 @@ export default function Dashboard() {
             </div>
             {hasMore && filters.todayOnly === '' && (
               <div className="mt-16 flex justify-center">
-                <button 
-                  onClick={() => {
-                    const nextPage = filters.page + 1;
-                    setFilters(f => ({ ...f, page: nextPage }));
-                    loadData({ ...filters, page: nextPage }, true);
-                  }} 
-                  disabled={loadingMore} 
-                  className="px-12 py-4 bg-white border-2 border-gray-900 rounded-2xl font-black text-[11px] tracking-widest uppercase hover:bg-gray-900 hover:text-white transition-all flex items-center gap-2"
-                >
+                <button onClick={() => { const nextPage = filters.page + 1; setFilters(f => ({ ...f, page: nextPage })); loadData({ ...filters, page: nextPage }, true); }} disabled={loadingMore} className="px-12 py-4 bg-white border-2 border-gray-900 rounded-2xl font-black text-[11px] tracking-widest uppercase hover:bg-gray-900 hover:text-white transition-all flex items-center gap-2">
                   {loadingMore && <Loader2 size={14} className="animate-spin" />} SEE MORE
                 </button>
               </div>

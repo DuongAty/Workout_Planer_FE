@@ -11,6 +11,8 @@ import GoogleCallback from './page/GoogleCallback';
 import ExerciseTracking from './components/ExerciseTracking';
 import BodyMeasurements from './page/BodyMeasurements';
 import { Toaster } from 'react-hot-toast';
+import ProfilePage from './page/ProfilePage';
+import CaloriePage from './page/CaloriePage';
 
 // Component bao bọc Layout chính (Có Navbar và Container)
 const MainLayout = ({ children }) => (
@@ -31,7 +33,6 @@ export default function App() {
         {/* NHÓM 1: Các trang FULL SCREEN (Không có Navbar/Container) */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/auth/google/callback" element={<GoogleCallback />} />
         <Route path="/" element={<MainLayout><LandingPage /></MainLayout>} />
         <Route 
           path="/dashboard" 
@@ -56,6 +57,18 @@ export default function App() {
               <MainLayout><ExerciseTracking /></MainLayout>
             </ProtectedRoute>
           } 
+        />
+          <Route 
+          path="/calories" 
+          element={
+            <ProtectedRoute>
+              <MainLayout><CaloriePage
+               /></MainLayout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route path="/profile/:userId"
+        element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>}
         />
         <Route 
           path="/measurements" 

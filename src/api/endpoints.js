@@ -6,6 +6,14 @@ export const authApi = {
   getMe: () => axiosClient.get('v1/auth/me'),
   logout: () => axiosClient.post('v1/auth/logout'),
   refresh: (token) => axiosClient.post('v1/auth/refresh', { refreshToken: token }),
+  updateProfile: (id, data) => axiosClient.patch(`v1/auth/${id}/update-user`, data),
+uploadAvatar: (id, formData) => {
+  return axiosClient.post(`v1/auth/${id}/upload-avatar`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+}
 };
 
 export const workoutApi = {
@@ -28,6 +36,7 @@ export const workoutApi = {
   updateItemStatus: (id, data) => axiosClient.patch(`v1/workoutplans/${id}/item-status`, data),
   rescheduleItem: (id, data) => axiosClient.patch(`v1/workoutplans/${id}/reschedule-item`, data),
   checkAllAutoMissed: () => axiosClient.patch(`v1/workoutplans/check-missed-all`),
+  createByAi: (message)=> axiosClient.post(`v1/workoutplans/ai`, message)
 };
 
 export const exerciseApi = {
@@ -67,4 +76,9 @@ export const stepOfExerciseApi = {
   delete: (id) => {
     return axiosClient.delete(`steps-of-exercise/${id}`);
   }
+};
+
+export const nutritionApi = { 
+  getDailySummary: () => axiosClient.get('nutrition/daily-summary'),
+  logMeal: (mealText) => axiosClient.post('nutrition/log', { meal: mealText  })
 };

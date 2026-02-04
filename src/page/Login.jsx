@@ -27,9 +27,39 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_AUTH_URL;
-    window.location.href = GOOGLE_AUTH_URL;
+  const popup = window.open(
+    "http://localhost:3000/api/v1/auth/google", // URL login của Backend
+    "googleLogin",
+    "width=500,height=600"
+  );
+
+  const handleMessage = (event) => {
+    // 1. Debug: Xem tin nhắn có về tới đây không
+    console.log("Origin nhận được:", event.origin);
+    console.log("Data nhận được:", event.data);
+
+    // 2. Kiểm tra Origin (Bỏ qua nếu đang debug để test cho nhanh)
+    if (event.origin !== "http://localhost:3000") return;
+
+    if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
+      const { accessToken, refreshToken } = event.data;
+
+      // 3. Thực hiện lưu và navigate
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      login({ accessToken, refreshToken });
+      navigate('/dashboard');
+      window.location.href = '/dashboard';
+      // 4. Dọn dẹp listener
+      window.removeEventListener('message', handleMessage);
+    }
   };
+
+  window.addEventListener('message', handleMessage);
+  };
+
+
+
 
   return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 relative overflow-hidden">
