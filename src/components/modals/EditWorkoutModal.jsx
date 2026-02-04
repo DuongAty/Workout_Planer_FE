@@ -15,14 +15,11 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
   const [daysOfWeek, setDaysOfWeek] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Khởi tạo và Reset dữ liệu khi mở Modal
   useEffect(() => {
     if (workout && isOpen) {
       setName(workout.name || '');
       setStartDate(workout.startDate || '');
       setEndDate(workout.endDate || '');
-      
-      // Ép kiểu dữ liệu về Number để logic highlight và so sánh chuẩn xác
       const initialDays = Array.isArray(workout.daysOfWeek) 
         ? workout.daysOfWeek.map(d => Number(d)) 
         : [];
@@ -32,18 +29,14 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
 
   const hasChanges = useMemo(() => {
     if (!workout) return false;
-
     const isNameChanged = name !== workout.name;
     const isStartDateChanged = startDate !== (workout.startDate || '');
     const isEndDateChanged = endDate !== (workout.endDate || '');
-    
-    // So sánh mảng daysOfWeek
-    const currentDays = [...daysOfWeek].sort().join(',');
+        const currentDays = [...daysOfWeek].sort().join(',');
     const originalDays = Array.isArray(workout.daysOfWeek) 
       ? workout.daysOfWeek.map(d => Number(d)).sort().join(',') 
       : '';
     const isDaysChanged = currentDays !== originalDays;
-
     return isNameChanged || isStartDateChanged || isEndDateChanged || isDaysChanged;
   }, [name, startDate, endDate, daysOfWeek, workout]);
 
@@ -90,7 +83,6 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
             <X size={20} />
           </button>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Input Tên */}
           <div>
@@ -101,7 +93,6 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
               value={name} onChange={e => setName(e.target.value)}
             />
           </div>
-
           {/* Input Ngày */}
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -121,7 +112,6 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
               />
             </div>
           </div>
-
           {/* Nút chọn Thứ */}
           <div>
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 mb-2 block">Repeat on days</label>
@@ -144,7 +134,6 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
               })}
             </div>
           </div>
-
           {/* Nút Submit có trạng thái Disabled */}
           <button 
             disabled={!hasChanges || loading}

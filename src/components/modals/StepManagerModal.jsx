@@ -7,12 +7,10 @@ export default function StepManagerModal({ exercise, onClose }) {
   const [steps, setSteps] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 1. Tải danh sách step hiện có khi mở Modal
   useEffect(() => {
     const fetchSteps = async () => {
       try {
         const res = await stepOfExerciseApi.getByExercise(exercise.id);
-        // Sắp xếp theo thứ tự order
         const sortedSteps = (res.data || res).sort((a, b) => a.order - b.order);
         setSteps(sortedSteps);
       } catch (err) {
@@ -45,8 +43,6 @@ const handleDeleteStep = async (stepId, index) => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      // Logic: Gửi tất cả step lên Server. 
-      // Bạn có thể tối ưu bằng cách chỉ gửi những step có thay đổi.
       await Promise.all(steps.map(step => {
         if (step.isNew) {
           return stepOfExerciseApi.create(exercise.id, { 
@@ -60,7 +56,6 @@ const handleDeleteStep = async (stepId, index) => {
           });
         }
       }));
-      
       toast.success("Cập nhật các bước tập thành công!");
       onClose();
     } catch (err) {
@@ -81,7 +76,6 @@ const handleDeleteStep = async (stepId, index) => {
             <X size={20} className="text-gray-400" />
           </button>
         </div>
-
         {/* Body */}
         <div className="p-8 max-h-[60vh] overflow-y-auto space-y-4 custom-scrollbar">
           {steps.map((step, index) => (
@@ -107,7 +101,6 @@ const handleDeleteStep = async (stepId, index) => {
               </button>
             </div>
           ))}
-
           <button 
             onClick={addStep}
             className="w-full py-4 border-2 border-dashed border-gray-100 rounded-2xl flex flex-col items-center justify-center text-gray-300 hover:border-blue-200 hover:text-blue-400 transition-all gap-1"
@@ -116,7 +109,6 @@ const handleDeleteStep = async (stepId, index) => {
             <span className="text-[10px] font-black uppercase">Add Next Step</span>
           </button>
         </div>
-
         {/* Footer */}
         <div className="p-6 bg-gray-50 flex gap-4">
           <button 
