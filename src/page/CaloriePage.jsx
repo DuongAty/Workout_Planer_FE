@@ -4,7 +4,8 @@ import { toast } from 'react-hot-toast';
 import {
   Loader2, Calendar, RefreshCw, ChevronLeft, 
   Activity, BarChart3, ClipboardList, Send,
-  Zap, Target, Utensils, Flame, TrendingDown, PlusCircle
+  Zap, Target, Utensils, Flame, TrendingDown, PlusCircle,
+  MessageSquare // Thêm icon cho advice
 } from 'lucide-react';
 import { nutritionApi } from '../api/endpoints';
 
@@ -65,7 +66,7 @@ export default function CaloriePage() {
       await nutritionApi.logMeal(mealText.trim());
       toast.success('Ghi nhận bữa ăn thành công!', { id: t });
       setMealText('');
-      fetchData(); // Refresh lại dữ liệu Dashboard
+      fetchData(); 
     } catch (err) {
       toast.error('Lỗi phân tích bữa ăn', { id: t });
     } finally {
@@ -90,7 +91,6 @@ export default function CaloriePage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-12 font-sans">
-      {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <button onClick={() => navigate('/dashboard')} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
@@ -104,7 +104,6 @@ export default function CaloriePage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 mt-8 space-y-6">
-        
         {/* ROW 1: STATUS & TARGET */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8">
@@ -151,8 +150,6 @@ export default function CaloriePage() {
 
         {/* ROW 3: LOG MEAL & RECENT LOGS */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* LEFT: FORM NHẬP LOG */}
           <div className="lg:col-span-5 space-y-6">
             <form onSubmit={handleLogMeal} className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm">
               <div className="flex items-center gap-3 mb-6">
@@ -189,7 +186,7 @@ export default function CaloriePage() {
             </div>
           </div>
 
-          {/* RIGHT: DANH SÁCH CHI TIẾT BỮA ĂN */}
+          {/* RIGHT: DANH SÁCH CHI TIẾT BỮA ĂN (Cập nhật Advice) */}
           <div className="lg:col-span-7 bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm h-full">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
@@ -201,15 +198,15 @@ export default function CaloriePage() {
               </span>
             </div>
             
-            <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2 scrollbar-hide">
+            <div className="space-y-4 overflow-y-auto max-h-[600px] pr-2 scrollbar-hide">
               {recentLogs.length > 0 ? recentLogs.map((log, idx) => (
                 <div key={idx} className="bg-gray-50 rounded-3xl p-6 border border-transparent hover:border-indigo-100 hover:bg-white transition-all group shadow-sm hover:shadow-md">
                   <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <div className="font-black text-gray-800 group-hover:text-indigo-600 transition-colors text-lg italic">
+                    <div className="flex-1 pr-4">
+                      <div className="font-black text-gray-800 group-hover:text-indigo-600 transition-colors text-lg italic leading-tight">
                         {log.mealDescription || `Bữa ăn #${recentLogs.length - idx}`}
                       </div>
-                      <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter flex items-center gap-1 mt-1">
+                      <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter flex items-center gap-1 mt-2">
                         <Calendar size={10} /> 
                         {log.createdAt ? new Date(log.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Vừa xong'}
                       </div>
@@ -219,7 +216,7 @@ export default function CaloriePage() {
                       <div className="text-[10px] text-gray-400 font-bold uppercase italic">kcal</div>
                     </div>
                   </div>
-                  
+
                   {/* Macros Detail */}
                   <div className="grid grid-cols-3 gap-3 pt-4 border-t border-gray-100">
                     <div className="text-center bg-white rounded-2xl p-2 border border-gray-50">
@@ -235,6 +232,18 @@ export default function CaloriePage() {
                       <div className="text-sm font-black text-gray-700">{log.fat || 0}g</div>
                     </div>
                   </div>
+
+                  {/* AI Advice Section (MỚI THÊM) */}
+                  {log.advice && (
+                    <div className="mt-4 p-3 bg-indigo-50/50 rounded-2xl border border-indigo-100/50 flex gap-3 items-start">
+                      <div className="mt-0.5 text-indigo-600">
+                        <MessageSquare size={14} fill="currentColor" className="opacity-20" />
+                      </div>
+                      <p className="text-[11px] text-indigo-800 font-medium leading-relaxed italic">
+                        {log.advice}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )) : (
                 <div className="flex flex-col items-center justify-center py-20 text-gray-300">
@@ -244,7 +253,6 @@ export default function CaloriePage() {
               )}
             </div>
           </div>
-
         </div>
       </main>
     </div>
