@@ -53,9 +53,9 @@ export default function ProfilePage() {
     return `${API_URL}/${avatar}`;
   };
 
-  // Helper để render Icon của Provider
   const renderProviderIcon = (provider) => {
-    if (provider?.toLowerCase() === 'google') {
+    const p = provider?.toLowerCase();
+    if (p === 'google') {
       return (
         <svg className="w-4 h-4" viewBox="0 0 24 24">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -65,11 +65,11 @@ export default function ProfilePage() {
         </svg>
       );
     }
-    if (provider?.toLowerCase() === 'facebook') {
+    if (p === 'facebook') {
       return (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
       );
     }
     return <User size={14} className="text-blue-600" />;
@@ -124,6 +124,7 @@ export default function ProfilePage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-blue-600" /></div>;
 
   const isSocialUser = formData.provider !== 'local';
+  const isFacebook = formData.provider?.toLowerCase() === 'facebook';
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
@@ -133,10 +134,8 @@ export default function ProfilePage() {
         </button>
 
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
-          {/* Header với Gradient và Avatar/Provider */}
           <div className="h-40 bg-gradient-to-r from-blue-600 to-indigo-700 relative">
             <div className="absolute -bottom-16 left-10 flex items-end gap-6">
-              {/* Avatar Section */}
               <div className="relative group">
                 <div className={`w-32 h-32 rounded-3xl border-8 border-white shadow-xl overflow-hidden bg-gray-100 transition-transform duration-500 group-hover:scale-105 ${uploading ? 'opacity-50' : ''}`}>
                   <img 
@@ -152,7 +151,6 @@ export default function ProfilePage() {
                 </label>
               </div>
 
-              {/* Provider Badge */}
               <div className="mb-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-lg border border-white/50 flex items-center gap-3 transition-all hover:bg-white">
                 <div className="flex items-center justify-center w-7 h-7 bg-white rounded-xl shadow-sm border border-gray-50">
                   {renderProviderIcon(formData.provider)}
@@ -178,7 +176,15 @@ export default function ProfilePage() {
 
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2"><Tag size={14}/> Username</label>
-                  <input disabled={!isEditing} value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} className="w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 focus:bg-white transition-all disabled:opacity-60" />
+                    {isFacebook && isEditing && (
+                    <p className="text-[10px] text-amber-600 font-bold tracking-tight italic">* Username linked to Facebook cannot be changed.</p>
+                  )}
+                  <input 
+                    disabled={!isEditing || isFacebook} 
+                    value={formData.username} 
+                    onChange={e => setFormData({...formData, username: e.target.value})} 
+                    className={`w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none transition-all disabled:opacity-60 ${isFacebook && isEditing ? 'cursor-not-allowed italic text-gray-400' : 'focus:border-blue-400 focus:bg-white'}`} 
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -219,15 +225,17 @@ export default function ProfilePage() {
 
               <div className="space-y-2">
                 <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2"><Mail size={14}/> Email Address</label>
+                {isSocialUser && isEditing && (
+                  <p className="text-[10px] text-amber-600 font-bold tracking-tight italic">* Email linked to {formData.provider} account cannot be changed.</p>
+                )}
                 <input 
                   disabled={!isEditing || isSocialUser} 
                   type="email" 
                   value={formData.email} 
+                  onChange={e => setFormData({...formData, email: e.target.value})}
                   className={`w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none disabled:opacity-60 ${isSocialUser && isEditing ? 'cursor-not-allowed italic text-gray-400' : 'focus:border-blue-400 focus:bg-white'}`} 
                 />
-                {isSocialUser && isEditing && (
-                  <p className="text-[10px] text-amber-600 font-bold tracking-tight italic">* Email linked to social provider cannot be changed.</p>
-                )}
+                
               </div>
 
               <div className="flex gap-4 pt-6">
