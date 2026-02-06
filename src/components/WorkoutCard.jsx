@@ -52,6 +52,10 @@ export const WorkoutCard = ({ plan, onDelete, onEditName, onEditSchedule, onOpen
             <CalendarDays size={14} className="text-blue-500" />
             {formatDate(plan.startDate)} - {formatDate(plan.endDate)}
           </div>
+          <div className="flex items-center gap-2 text-[10px] font-black text-orange-500 tracking-widest uppercase bg-orange-50 w-fit px-3 py-1 rounded-full border border-orange-100">
+            <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+            {plan.estimatedCalories || 0} KCAL / SESSION
+          </div>
           <button 
             onClick={() => onOpenTimeline(plan)}
             className={`flex items-center self-start gap-2 px-4 py-2 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all hover:brightness-110 active:scale-95 ${

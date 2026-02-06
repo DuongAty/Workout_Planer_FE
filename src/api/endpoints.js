@@ -79,6 +79,6 @@ export const stepOfExerciseApi = {
 };
 
 export const nutritionApi = { 
-  getDailySummary: () => axiosClient.get('nutrition/daily-summary'),
+  getDailySummary: (date) => axiosClient.get(`/nutrition/daily-summary${date ? `?date=${date}` : ''}`),
   logMeal: (mealText) => axiosClient.post('nutrition/log', { meal: mealText  })
 };

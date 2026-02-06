@@ -7,7 +7,7 @@ import Login from './page/Login';
 import Register from './page/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './page/LandingPage';
-import GoogleCallback from './page/GoogleCallback';
+import SocialAuthCallback from './page/SocialAuthCallback';
 import ExerciseTracking from './components/ExerciseTracking';
 import BodyMeasurements from './page/BodyMeasurements';
 import { Toaster } from 'react-hot-toast';
@@ -33,7 +33,8 @@ export default function App() {
         {/* NHÓM 1: Các trang FULL SCREEN (Không có Navbar/Container) */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/auth/google/callback" element={<GoogleCallback />} />
+        <Route path="/auth/google/callback" element={<SocialAuthCallback />} />
+        <Route path="/auth/facebook/callback" element={<SocialAuthCallback />} />
         <Route path="/" element={<MainLayout><LandingPage /></MainLayout>} />
         <Route 
           path="/dashboard" 

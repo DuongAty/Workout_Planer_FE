@@ -12,7 +12,7 @@ import AddExerciseForm from '../components/modals/AddExerciseForm';
 import VideoModal from '../components/modals/VideoModal';
 import StepManagerModal from '../components/modals/StepManagerModal';
 import toast from 'react-hot-toast';
-import { MUSCLE_GROUPS } from '../common/constants';
+import { formatTime, MUSCLE_GROUPS } from '../common/constants';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -219,8 +219,8 @@ export default function WorkoutDetail() {
                     <div className="grid grid-cols-5 gap-1 bg-gray-50/80 p-4 rounded-[2rem] items-center">
                       <StatItem label="Sets" value={ex.numberOfSets} />
                       <StatItem label="Reps" value={ex.repetitions} />
-                      <StatItem label="Rest" value={`${ex.restTime}s`} />
-                      <StatItem label="Time" value={`${ex.duration}s`} />
+                      <StatItem label="Rest" value={`${formatTime(ex.restTime)}`} />
+                      <StatItem label="Time" value={`${formatTime(ex.duration)}`} />
                       <div className="flex flex-col items-center justify-center border-l border-gray-200/50 h-full w-full">
                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter mb-1">Details</p>
                         <button 
