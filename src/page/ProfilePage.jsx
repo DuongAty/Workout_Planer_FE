@@ -173,6 +173,8 @@ export default function ProfilePage() {
                   <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2"><User size={14}/> Full Name</label>
                   <input disabled={!isEditing} value={formData.fullname} onChange={e => setFormData({...formData, fullname: e.target.value})} className="w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 focus:bg-white transition-all disabled:opacity-60" />
                 </div>
+
+                <div className="space-y-2">
                   <input 
                     disabled={true} 
                     value={formData.username} 
