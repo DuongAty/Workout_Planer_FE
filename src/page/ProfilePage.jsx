@@ -175,6 +175,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
+                  <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2"><Tag size={14}/> Username</label>
                   <input 
                     disabled={true} 
                     value={formData.username} 
