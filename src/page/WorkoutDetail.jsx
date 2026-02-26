@@ -290,17 +290,26 @@ export default function WorkoutDetail() {
       )}
       {/* MODALS */}
       <VideoModal isOpen={!!selectedVideo} videoUrl={selectedVideo} exerciseId={selectedExercise?.id} exerciseName={selectedExercise?.name} onClose={() => setSelectedVideo(null)} />
-      {showStepModal && selectedExercise && (
-        <StepManagerModal 
-          exercise={selectedExercise} 
-          onClose={() => { 
-            setShowStepModal(false); 
-            setStepsMap(prev => { const next = {...prev}; delete next[selectedExercise.id]; return next; });
-            if (expandedId === selectedExercise.id) fetchStepsByExercise(selectedExercise.id);
-            setSelectedExercise(null); 
-          }} 
-        />
-      )}
+{showStepModal && selectedExercise && (
+  <StepManagerModal 
+    isOpen={showStepModal}
+    exerciseId={selectedExercise.id}
+    initialSteps={stepsMap[selectedExercise.id] || []} 
+    onClose={() => { 
+      setShowStepModal(false); 
+      setSelectedExercise(null); 
+    }} 
+    onSuccess={() => {
+      setStepsMap(prev => { 
+        const next = {...prev}; 
+        delete next[selectedExercise.id]; 
+        return next; 
+      });
+      fetchStepsByExercise(selectedExercise.id);
+      fetchDetail();
+    }}
+  />
+)}
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }

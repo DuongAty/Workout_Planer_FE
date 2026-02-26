@@ -263,9 +263,9 @@ export default function Dashboard() {
           
           <div className="flex flex-wrap gap-3 w-full md:w-auto">
             <Link to="/calories" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border-2 border-gray-900 text-gray-900 px-6 py-4 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 shadow-sm group">
-              <Utensils size={16} strokeWidth={3} className="group-hover:rotate-12 transition-transform" /> Calories
+              <Utensils size={16} strokeWidth={3} className="transition-transform" /> Calories
             </Link>
-            <Link to="/measurements" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border-2 border-gray-900 text-gray-900 px-6 py-4 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all hover:bg-gray-50 shadow-sm">
+            <Link to="/measurements" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border-2 border-gray-900 text-gray-900 px-6 py-4 rounded-2xl font-black text-[11px] tracking-widest uppercase transition-all hover:bg-green-50 hover:border-green-500 hover:text-green-600 shadow-sm">
               <Activity size={16} strokeWidth={3} /> Measurements
             </Link>
             <button onClick={() => setActiveModal({ type: 'CREATE' })} className="w-full md:w-auto bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-[11px] flex items-center justify-center gap-2 uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">

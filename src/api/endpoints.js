@@ -64,14 +64,11 @@ export const measurementApi = {
 };
 
 export const stepOfExerciseApi = {
-  create: (exerciseId, data) => {
-    return axiosClient.post(`/steps-of-exercise/${exerciseId}`, data);
+  saveMany: (exerciseId, steps) => {
+    return axiosClient.patch(`/steps-of-exercise/exercise/${exerciseId}/steps`, { steps });
   },
   getByExercise: (exerciseId) => {
     return axiosClient.get(`steps-of-exercise/exercise/${exerciseId}`);
-  },
-  update: (id, data) => {
-    return axiosClient.patch(`steps-of-exercise/${id}`, data);
   },
   delete: (id) => {
     return axiosClient.delete(`steps-of-exercise/${id}`);
