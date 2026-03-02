@@ -16,6 +16,7 @@ import WorkoutTimelineModal from '../components/modals/WorkoutTimelineModal';
 import toast from 'react-hot-toast';
 import { formatDate, INITIAL_FILTERS, DEBOUNCE_DELAY } from '../common/constants';
 import { WorkoutCard } from '../components/WorkoutCard';
+import { onMessageListener, requestForToken } from '../utils/firebase-messaging';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -40,6 +41,13 @@ export default function Dashboard() {
   const getTodayString = () => new Date().toISOString().split('T')[0];
 
   // 1. Kiểm tra User Profile ngay khi mount
+  useEffect(() => {
+      requestForToken();
+      onMessageListener().then((payload) => {
+        toast.success(`${payload.notification.title}: ${payload.notification.body}`);
+      });
+    }, []);
+
   useEffect(() => {
     const fetchUserAndCheckProfile = async () => {
       try {

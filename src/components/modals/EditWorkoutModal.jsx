@@ -3,9 +3,21 @@ import { workoutApi } from '../../api/endpoints';
 import { X, Calendar, Edit3, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+const parseRRuleToDays = (rruleString) => {
+  if (!rruleString) return [];
+    const match = rruleString.match(/BYDAY=([^;]+)/);
+  if (!match) return [];
+
+  const daysStr = match[1];
+    const rruleDayMap = {
+    'MO': 0, 'TU': 1, 'WE': 2, 'TH': 3, 'FR': 4, 'SA': 5, 'SU': 6
+  };
+  return daysStr.split(',').map(day => rruleDayMap[day]);
+};
+
 const DAYS = [
-  { label: 'CN', value: 0 }, { label: 'T2', value: 1 }, { label: 'T3', value: 2 },
-  { label: 'T4', value: 3 }, { label: 'T5', value: 4 }, { label: 'T6', value: 5 }, { label: 'T7', value: 6 }
+  { label: 'T2', value: 0 }, { label: 'T3', value: 1 }, { label: 'T4', value: 2 },
+  { label: 'T5', value: 3 }, { label: 'T6', value: 4 }, { label: 'T7', value: 5 }, { label: 'CN', value: 6 }
 ];
 
 export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }) {
@@ -20,9 +32,7 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
       setName(workout.name || '');
       setStartDate(workout.startDate || '');
       setEndDate(workout.endDate || '');
-      const initialDays = Array.isArray(workout.daysOfWeek) 
-        ? workout.daysOfWeek.map(d => Number(d)) 
-        : [];
+      const initialDays = parseRRuleToDays(workout.recurrenceRule);
       setDaysOfWeek(initialDays.sort());
     }
   }, [workout, isOpen]);

@@ -4,8 +4,8 @@ import { X, Calendar, Dumbbell } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const DAYS = [
-  { label: 'CN', value: 0 }, { label: 'T2', value: 1 }, { label: 'T3', value: 2 },
-  { label: 'T4', value: 3 }, { label: 'T5', value: 4 }, { label: 'T6', value: 5 }, { label: 'T7', value: 6 }
+  { label: 'T2', value: 0 }, { label: 'T3', value: 1 }, { label: 'T4', value: 2 },
+  { label: 'T5', value: 3 }, { label: 'T6', value: 4 }, { label: 'T7', value: 5 }, { label: 'CN', value: 6 }
 ];
 
 export default function CreateWorkoutModal({ isOpen, onClose, onSuccess }) {
