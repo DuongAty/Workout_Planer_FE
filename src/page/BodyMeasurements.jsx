@@ -64,7 +64,6 @@ export default function BodyMeasurements() {
     e.preventDefault();
     const val = parseFloat(newValue);
     if (!newValue || isNaN(val) || isSaving) return;
-
     setIsSaving(true);
     try {
       await measurementApi.create({ 
@@ -75,7 +74,8 @@ export default function BodyMeasurements() {
       setNewValue('');
       loadData();
     } catch (err) {
-      toast.error('Lỗi khi lưu dữ liệu');
+      const errorData = err.response?.data;
+      toast.error(errorData.message);
     } finally {
       setIsSaving(false);
     }

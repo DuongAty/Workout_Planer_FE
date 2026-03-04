@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { authApi } from '../api/endpoints';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Lock, Mail, ArrowRight, Dumbbell, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { User, Lock, Mail, ArrowRight, Dumbbell, Eye, EyeOff, Loader2, UserRoundCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Register() {
@@ -15,9 +15,11 @@ export default function Register() {
     try {
       // Gọi API Register
       await authApi.register({
+        email: data.email,
         fullname: data.fullname,
         username: data.username,
         password: data.password
+
       });
       toast.success("Congratulations! You have successfully registered.");
       navigate('/login');
@@ -51,11 +53,23 @@ export default function Register() {
         {/* Card Đăng Ký */}
         <div className="bg-white/10 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="space-y-1.5">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                <input 
+                  {...register("email")}
+                  placeholder="example@gmail.com"
+                  className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl text-white outline-none focus:border-blue-500 focus:bg-white/10 transition-all font-bold placeholder:text-gray-600"
+                  required 
+                />
+              </div>
+            </div>
             {/* Họ và tên */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                <UserRoundCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                 <input 
                   {...register("fullname")}
                   placeholder="Nguyễn Văn A"
