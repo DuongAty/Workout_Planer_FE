@@ -13,8 +13,11 @@ import BodyMeasurements from './page/BodyMeasurements';
 import { Toaster } from 'react-hot-toast';
 import ProfilePage from './page/ProfilePage';
 import CaloriePage from './page/CaloriePage';
+import ResetPassword from './page/ResetPassword';
+import { getMessaging, onMessage } from 'firebase/messaging';
+import { useEffect, useState } from 'react';
+import AIWorkoutReadyModal from './components/modals/AIWorkoutReadyModal';
 
-// Component bao bọc Layout chính (Có Navbar và Container)
 const MainLayout = ({ children }) => (
   <div className="min-h-screen bg-gray-50">
     <Navbar />
@@ -25,9 +28,36 @@ const MainLayout = ({ children }) => (
 );
 
 export default function App() {
+const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+const [aiData, setAiData] = useState(null);
+useEffect(() => {
+  const messaging = getMessaging();
+  const unsubscribe = onMessage(messaging, (payload) => {
+    // 1. Thêm log này để kiểm tra xem tin nhắn có tới được tab hiện tại không
+    console.log('FCM Payload received in foreground:', payload);
+
+    // 2. Ép kiểu dữ liệu vì Firebase thường trả về chuỗi cho các field trong data
+    if (payload.data?.type === 'AI_WORKOUT_COMPLETE') {
+      setAiData({
+        workoutName: payload.data.workoutName,
+        link: payload.data.link
+      });
+      
+      // 3. Sử dụng setTimeout một chút để đảm bảo state được cập nhật sau khi nhận tin
+      setTimeout(() => setIsAiModalOpen(true), 100);
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
   return (
     <AuthProvider>
       <Toaster position="top-right" reverseOrder={false} />
+      <AIWorkoutReadyModal 
+      isOpen={isAiModalOpen} 
+      onClose={() => setIsAiModalOpen(false)} 
+      data={aiData} 
+    />
       
       <Routes>
         {/* NHÓM 1: Các trang FULL SCREEN (Không có Navbar/Container) */}
@@ -35,6 +65,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/auth/google/callback" element={<SocialAuthCallback />} />
         <Route path="/auth/facebook/callback" element={<SocialAuthCallback />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<MainLayout><LandingPage /></MainLayout>} />
         <Route 
           path="/dashboard" 

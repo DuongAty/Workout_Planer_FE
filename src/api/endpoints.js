@@ -7,6 +7,8 @@ export const authApi = {
   logout: () => axiosClient.post('v1/auth/logout'),
   refresh: (token) => axiosClient.post('v1/auth/refresh', { refreshToken: token }),
   updateProfile: (id, data) => axiosClient.patch(`v1/auth/${id}/update-user`, data),
+  changePassword: (data) => axiosClient.patch('/v1/auth/change-password', data),
+  forgotPassword: (email) => axiosClient.post('/v1/auth/forgot-password', { email }),
   uploadAvatar: (id, formData) => {
     return axiosClient.post(`v1/auth/${id}/upload-avatar`, formData, {
       headers: {

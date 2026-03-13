@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 import { User, Lock, Eye, EyeOff, Loader2, LogIn, Dumbbell, AlertCircle } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
+import ForgotPasswordModal from '../components/modals/ForgotPasswordModal';
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -13,6 +14,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
   const googleLogin = useGoogleLogin({
     flow: 'auth-code',
@@ -99,6 +101,15 @@ export default function Login() {
                 </button>
               </div>
               {errors.password && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.password.message}</p>}
+              <div className="flex justify-end px-1">
+                <button 
+                  type="button"
+                  onClick={() => setIsForgotModalOpen(true)}
+                  className="text-[10px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-widest transition-colors"
+                >
+                  Forgot Password?
+                </button>
+              </div>
             </div>
 
             <button 
@@ -158,6 +169,10 @@ export default function Login() {
           Powered by TD Fitness System v2.0
         </p>
       </div>
+      <ForgotPasswordModal 
+        isOpen={isForgotModalOpen} 
+        onClose={() => setIsForgotModalOpen(false)} 
+      />
     </div>
   );
 }

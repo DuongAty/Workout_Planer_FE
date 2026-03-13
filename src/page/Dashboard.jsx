@@ -40,7 +40,6 @@ export default function Dashboard() {
 
   const getTodayString = () => new Date().toISOString().split('T')[0];
 
-  // 1. Kiểm tra User Profile ngay khi mount
   useEffect(() => {
       requestForToken();
       onMessageListener().then((payload) => {
