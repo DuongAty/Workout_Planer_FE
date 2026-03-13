@@ -122,14 +122,12 @@ export default function Dashboard() {
   const handleAiGenerate = async (e) => {
     e.preventDefault();
     if (!aiMessage.trim()) return;
-
     try {
       setIsGenerating(true);
       await workoutApi.createByAi({ message: aiMessage }); 
       toast.success("AI đã tạo lịch tập mới cho bạn!");
       setAiMessage("");
       setIsAiOpen(false);
-      loadData({ ...filters, page: 1 }, false); 
     } catch (err) {
       toast.error("AI gặp lỗi khi xử lý yêu cầu.");
     } finally {

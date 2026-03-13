@@ -33,18 +33,18 @@ const [aiData, setAiData] = useState(null);
 useEffect(() => {
   const messaging = getMessaging();
   const unsubscribe = onMessage(messaging, (payload) => {
-    // 1. Thêm log này để kiểm tra xem tin nhắn có tới được tab hiện tại không
-    console.log('FCM Payload received in foreground:', payload);
-
-    // 2. Ép kiểu dữ liệu vì Firebase thường trả về chuỗi cho các field trong data
-    if (payload.data?.type === 'AI_WORKOUT_COMPLETE') {
+    console.log('Nhận thông báo mới:', payload);
+    
+    // Kiểm tra chính xác cấu trúc data từ log của bạn
+    if (payload.data && payload.data.type === 'AI_WORKOUT_COMPLETE') {
+      // Cập nhật dữ liệu
       setAiData({
         workoutName: payload.data.workoutName,
         link: payload.data.link
       });
       
-      // 3. Sử dụng setTimeout một chút để đảm bảo state được cập nhật sau khi nhận tin
-      setTimeout(() => setIsAiModalOpen(true), 100);
+      // Mở Modal
+      setIsAiModalOpen(true);
     }
   });
 
