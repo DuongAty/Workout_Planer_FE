@@ -177,6 +177,12 @@ export default function Dashboard() {
     setFilters(prev => ({ ...prev, page: nextPage }));
   loadData({ ...filters, page: nextPage }, true);
 };
+const handleShowLess = () => {
+  const firstPageFilters = { ...filters, page: 1 };
+  setFilters(firstPageFilters);
+    loadData(firstPageFilters, false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
   const closeModal = () => setActiveModal({ type: null, data: null });
 
@@ -339,21 +345,28 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
-            {hasMore && filters.todayOnly === '' && (
-            <div className="mt-16 flex justify-center">
-              <button 
-                onClick={handleSeeMore} 
-                disabled={loadingMore} 
-                className="px-12 py-4 bg-white border-2 border-gray-900 rounded-2xl font-black text-[11px] tracking-widest uppercase hover:bg-gray-900 hover:text-white transition-all flex items-center gap-2"
-              >
-                {loadingMore ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  "SEE MORE"
+              <div className="mt-16 flex justify-center gap-4">
+                {/* Hiện nút SEE MORE nếu vẫn còn trang tiếp theo */}
+                {hasMore && filters.todayOnly === '' && (
+                  <button 
+                    onClick={handleSeeMore} 
+                    disabled={loadingMore} 
+                    className="px-12 py-4 bg-white border-2 border-gray-900 rounded-2xl font-black text-[11px] tracking-widest uppercase hover:bg-gray-900 hover:text-white transition-all flex items-center gap-2 shadow-sm"
+                  >
+                    {loadingMore ? <Loader2 size={14} className="animate-spin" /> : "SEE MORE"}
+                  </button>
                 )}
-              </button>
-            </div>
-          )}
+
+                {/* Hiện nút SHOW LESS khi đã ở trang > 1 */}
+                {filters.page > 1 && !loadingMore && (
+                  <button 
+                    onClick={handleShowLess} 
+                    className="px-12 py-4 bg-gray-100 text-gray-500 rounded-2xl font-black text-[11px] tracking-widest uppercase hover:bg-red-50 hover:text-red-600 transition-all flex items-center gap-2"
+                  >
+                    SHOW LESS
+                  </button>
+                )}
+              </div>
           </>
         )}
       </div>
