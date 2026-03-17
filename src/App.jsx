@@ -14,10 +14,8 @@ import { Toaster } from 'react-hot-toast';
 import ProfilePage from './page/ProfilePage';
 import CaloriePage from './page/CaloriePage';
 import ResetPassword from './page/ResetPassword';
-import { getMessaging, onMessage } from 'firebase/messaging';
-import { useEffect, useState } from 'react';
-import AIWorkoutReadyModal from './components/modals/AIWorkoutReadyModal';
 
+// Component bao bọc Layout chính (Có Navbar và Container)
 const MainLayout = ({ children }) => (
   <div className="min-h-screen bg-gray-50">
     <Navbar />
@@ -28,37 +26,9 @@ const MainLayout = ({ children }) => (
 );
 
 export default function App() {
-const [isAiModalOpen, setIsAiModalOpen] = useState(false);
-const [aiData, setAiData] = useState(null);
-useEffect(() => {
-  const messaging = getMessaging();
-  const unsubscribe = onMessage(messaging, (payload) => {
-    console.log('Nhận thông báo mới:', payload);
-    
-    // Kiểm tra chính xác cấu trúc data từ log của bạn
-    if (payload.data && payload.data.type === 'AI_WORKOUT_COMPLETE') {
-      // Cập nhật dữ liệu
-      setAiData({
-        workoutName: payload.data.workoutName,
-        link: payload.data.link
-      });
-      
-      // Mở Modal
-      setIsAiModalOpen(true);
-    }
-  });
-
-  return () => unsubscribe();
-}, []);
   return (
     <AuthProvider>
-      <Toaster position="top-right" reverseOrder={false} />
-      <AIWorkoutReadyModal 
-      isOpen={isAiModalOpen} 
-      onClose={() => setIsAiModalOpen(false)} 
-      data={aiData} 
-    />
-      
+      <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         {/* NHÓM 1: Các trang FULL SCREEN (Không có Navbar/Container) */}
         <Route path="/login" element={<Login />} />

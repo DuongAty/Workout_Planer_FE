@@ -41,9 +41,9 @@ export default function ExerciseTracking() {
           params: { startDate: filters.startDate, endDate: filters.endDate }
         })
       ]);
-      setStats(statsRes.data);
-      setProgressData(progressRes.data);
-      setTimeline(timelineRes.data);  
+      setStats(statsRes.data.data);
+      setProgressData(progressRes.data.data);
+      setTimeline(timelineRes.data.data);  
     } catch (err) {
       console.error("Data loading error:", err.response?.data || err.message);
     }

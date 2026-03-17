@@ -32,7 +32,7 @@ export default function StepManagerModal({ isOpen, exerciseId, onClose, onSucces
         try {
           setLoading(true);
           const res = await stepOfExerciseApi.getByExercise(exerciseId);
-          setSteps(res.data.map(s => ({ ...s, tempId: s.id || Math.random().toString() })));
+          setSteps(res.data.data.map(s => ({ ...s, tempId: s.id || Math.random().toString() })));
         } catch (error) {
           toast.error("Unable to load the list of steps");
         } finally {

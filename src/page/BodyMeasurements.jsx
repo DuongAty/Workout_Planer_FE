@@ -46,8 +46,8 @@ export default function BodyMeasurements() {
         measurementApi.getChartData(selectedGroup, startDate, endDate),
         measurementApi.getLatestProgress(selectedGroup)
       ]);
-      setChartData(chartRes.data || []);
-      setProgress(progRes.data || null);
+      setChartData(chartRes.data.data || []);
+      setProgress(progRes.data.data || null);
     } catch (err) {
       console.error(err);
       toast.error("Không thể kết nối máy chủ");

@@ -47,7 +47,7 @@ export default function WorkoutDetail() {
         muscleGroup: filters.muscleGroup || undefined,
         duration: filters.duration || undefined,
       });
-      setWorkoutPlan(res.data);
+      setWorkoutPlan(res.data.data);
     } catch (err) {
       toast.error("Unable to load assignment information!");
     } finally {
@@ -94,7 +94,7 @@ export default function WorkoutDetail() {
     try {
       setStepsLoading(prev => ({ ...prev, [exerciseId]: true }));
       const res = await stepOfExerciseApi.getByExercise(exerciseId); 
-      setStepsMap(prev => ({ ...prev, [exerciseId]: res.data }));
+      setStepsMap(prev => ({ ...prev, [exerciseId]: res.data.data }));
     } catch (err) {
       toast.error("Unable to load the instructions!");
     } finally {

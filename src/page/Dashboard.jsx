@@ -44,7 +44,7 @@ export default function Dashboard() {
       requestForToken();
       onMessageListener().then((payload) => {
         toast.success(`${payload.notification.title}: ${payload.notification.body}`);
-      });
+      }); 
     }, []);
 
   useEffect(() => {
@@ -53,7 +53,6 @@ export default function Dashboard() {
         const res = await authApi.getMe();
         const userData = res.data;
         setUser(userData);
-
         // Kiểm tra các trường thông tin quan trọng
         const { age, gender, goal, height, weight } = userData;
         if (age === null || gender === null || goal === null || height === null || weight === null) {
@@ -83,7 +82,9 @@ export default function Dashboard() {
       );
       const res = await workoutApi.getAll(params);
       const rawData = res.data?.data || [];
-      setHasMore(currentFilters.page < (res.data.totalPages || 1));
+      const meta = res.data?.meta;
+      const totalPages = meta?.totalPages || 1;
+      setHasMore(currentFilters.page < totalPages);
       setWorkouts(prev => isAppend ? [...prev, ...rawData] : rawData);
     } catch (err) {
       toast.error("Failed to load workouts");
@@ -118,7 +119,6 @@ export default function Dashboard() {
     return () => clearTimeout(handler);
   }, [filters.search, filters.numExercises, filters.startDate, filters.endDate, filters.todayOnly, loadData]);
 
-  // 4. Xử lý yêu cầu AI
   const handleAiGenerate = async (e) => {
     e.preventDefault();
     if (!aiMessage.trim()) return;
@@ -171,6 +171,12 @@ export default function Dashboard() {
       toast.error("Error deleting");
     }
   };
+
+  const handleSeeMore = () => {
+  const nextPage = filters.page + 1;
+    setFilters(prev => ({ ...prev, page: nextPage }));
+  loadData({ ...filters, page: nextPage }, true);
+};
 
   const closeModal = () => setActiveModal({ type: null, data: null });
 
@@ -334,12 +340,20 @@ export default function Dashboard() {
               )}
             </div>
             {hasMore && filters.todayOnly === '' && (
-              <div className="mt-16 flex justify-center">
-                <button onClick={() => { const nextPage = filters.page + 1; setFilters(f => ({ ...f, page: nextPage })); loadData({ ...filters, page: nextPage }, true); }} disabled={loadingMore} className="px-12 py-4 bg-white border-2 border-gray-900 rounded-2xl font-black text-[11px] tracking-widest uppercase hover:bg-gray-900 hover:text-white transition-all flex items-center gap-2">
-                  {loadingMore && <Loader2 size={14} className="animate-spin" />} SEE MORE
-                </button>
-              </div>
-            )}
+            <div className="mt-16 flex justify-center">
+              <button 
+                onClick={handleSeeMore} 
+                disabled={loadingMore} 
+                className="px-12 py-4 bg-white border-2 border-gray-900 rounded-2xl font-black text-[11px] tracking-widest uppercase hover:bg-gray-900 hover:text-white transition-all flex items-center gap-2"
+              >
+                {loadingMore ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  "SEE MORE"
+                )}
+              </button>
+            </div>
+          )}
           </>
         )}
       </div>

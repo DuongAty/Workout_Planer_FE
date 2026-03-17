@@ -18,7 +18,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3 bg-gray-50 pl-2 pr-4 py-1.5 rounded-full border border-gray-100 shadow-sm">
             {/* SỬA TẠI ĐÂY: Dùng div thay vì p để tránh lỗi nested p và nhận onClick chuẩn hơn */}
             <div 
-              onClick={() => navigate(`/profile/${user?.id}`)}
+              onClick={() => navigate(`/profile/${user.id}`)}
               className="flex items-center gap-3 cursor-pointer group transition-all"
             >
               <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white shadow-sm bg-gray-200 flex items-center justify-center group-hover:border-blue-400 transition-all">

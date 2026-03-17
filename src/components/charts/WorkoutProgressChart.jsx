@@ -26,7 +26,7 @@ const WorkoutProgressChart = ({ scheduleItems }) => {
       {/* Vòng tròn biểu đồ */}
       <div className="w-12 h-12 relative">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
+          <PieChart width={48} height={48}>
             <Pie
               data={data}
               innerRadius={15}

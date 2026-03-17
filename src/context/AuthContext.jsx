@@ -10,8 +10,9 @@ export const AuthProvider = ({ children }) => {
   const fetchMe = async () => {
     try {
       const res = await authApi.getMe();
-      setUser(res.data);
-      return res.data;
+      const userData = res.data.data;
+      setUser(userData);
+      return userData;
     } catch (err) {
       logout();
       throw err;
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const res = await authApi.login(credentials);
-    const { accessToken, refreshToken } = res.data;
+    const { accessToken, refreshToken } = res.data.data;
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
     return await fetchMe(); 

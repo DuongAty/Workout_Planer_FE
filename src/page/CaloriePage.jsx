@@ -73,7 +73,7 @@ export default function CaloriePage() {
     try {
       // Gọi đến API /summary?date=YYYY-MM-DD
       const { data } = await nutritionApi.getDailySummary(dateStr);
-      setSummary(data);
+      setSummary(data.data);
     } catch (err) {
       console.error(err);
       toast.error('Không thể tải dữ liệu ngày ' + dateStr);

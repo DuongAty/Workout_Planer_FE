@@ -22,7 +22,6 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState({
     fullname: '', username: '', email: '', avatar: '', age: '', height: '', weight: '', goal: '', gender: '', provider: '',
   });
-
   useEffect(() => {
     if (user) {
       setFormData({
@@ -70,13 +69,14 @@ export default function ProfilePage() {
     setSubmitting(true);
     const loadingToast = toast.loading("Saving...");
     try {
-      const { data } = await authApi.updateProfile(user.id, {
+      const { data: response } = await authApi.updateProfile(user.id, {
         ...formData,
         age: formData.age ? Number(formData.age) : null,
         height: formData.height ? Number(formData.height) : null,
         weight: formData.weight ? Number(formData.weight) : null,
       });
-      setUser(data);
+      const updatedUser = response.data; 
+      setUser(updatedUser);
       setIsEditing(false);
       toast.success("Profile updated!", { id: loadingToast });
     } catch (error) {

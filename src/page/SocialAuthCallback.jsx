@@ -22,15 +22,13 @@ export default function SocialAuthCallback() {
       const verify = async () => {
         try {
           const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/${provider}`, { code });
-          const { accessToken, refreshToken } = res.data;
+          const { accessToken, refreshToken } = res.data.data;
           
           localStorage.setItem('accessToken', accessToken);
           localStorage.setItem('refreshToken', refreshToken);
           
           if (login) login({ accessToken, refreshToken });
-          
-          // Chuyển hướng về dashboard
-          window.location.href = '/dashboard'; 
+                    window.location.href = '/dashboard'; 
         } catch (error) {
           console.error(`${provider} Auth Failed`, error);
           navigate('/login');
