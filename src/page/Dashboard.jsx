@@ -83,8 +83,8 @@ export default function Dashboard() {
       const res = await workoutApi.getAll(params);
       const rawData = res.data?.data || [];
       const meta = res.data?.meta;
-      const totalPages = meta?.totalPages || 1;
-      setHasMore(currentFilters.page < totalPages);
+      const lastPage = meta?.lastPage || 1;
+      setHasMore(currentFilters.page < lastPage);
       setWorkouts(prev => isAppend ? [...prev, ...rawData] : rawData);
     } catch (err) {
       toast.error("Failed to load workouts");
@@ -148,18 +148,24 @@ export default function Dashboard() {
     }));
   };
 
-  const handleDateSelect = (value) => {
-    if (value?.[0] && value?.[1]) {
-      setFilters(prev => ({
-        ...prev,
-        startDate: value[0].toISOString().split('T')[0],
-        endDate: value[1].toISOString().split('T')[0],
-        todayOnly: '', 
-        page: 1
-      }));
-      setShowCalendar(false);
-    }
-  };
+const handleDateSelect = (value) => {
+  if (value?.[0] && value?.[1]) {
+    const toLocalISOString = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    setFilters(prev => ({
+      ...prev,
+      startDate: toLocalISOString(value[0]),
+      endDate: toLocalISOString(value[1]),
+      todayOnly: '', 
+      page: 1
+    }));
+    setShowCalendar(false);
+  }
+};
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this workout plan?")) return;

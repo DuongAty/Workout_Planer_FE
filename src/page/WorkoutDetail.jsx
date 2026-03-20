@@ -39,13 +39,14 @@ export default function WorkoutDetail() {
   const [stepsLoading, setStepsLoading] = useState({});
   const [filters, setFilters] = useState({ search: '', muscleGroup: '', duration: '' });
   const [debouncedSearch] = useDebounce(filters.search, 500);
+  const [ debouncedDuration] = useDebounce(filters.duration, 500);
   const fetchDetail = useCallback(async () => {
     try {
       setLoading(true);
       const res = await workoutApi.getExercises(id, {
         search: debouncedSearch,
         muscleGroup: filters.muscleGroup || undefined,
-        duration: filters.duration || undefined,
+        duration: debouncedDuration,
       });
       setWorkoutPlan(res.data.data);
     } catch (err) {
@@ -53,7 +54,7 @@ export default function WorkoutDetail() {
     } finally {
       setLoading(false);
     }
-  }, [id, debouncedSearch, filters.muscleGroup, filters.duration]);
+  }, [id, debouncedSearch, filters.muscleGroup, debouncedDuration]);
   useEffect(() => { fetchDetail(); }, [fetchDetail]);
 
   const handleCompleteToday = async () => {
