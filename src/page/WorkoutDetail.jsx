@@ -40,6 +40,10 @@ export default function WorkoutDetail() {
   const [filters, setFilters] = useState({ search: '', muscleGroup: '', duration: '' });
   const [debouncedSearch] = useDebounce(filters.search, 500);
   const [ debouncedDuration] = useDebounce(filters.duration, 500);
+  const muscleOptions = [
+  { value: "", label: "All muscle groups" },
+  ...MUSCLE_GROUPS.map(group => ({ value: group, label: group }))
+];
   const fetchDetail = useCallback(async () => {
     try {
       setLoading(true);
@@ -177,7 +181,7 @@ export default function WorkoutDetail() {
         </div>
         <div className="relative">
           <Filter className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
-          <select name="muscleGroup" value={filters.muscleGroup} onChange={(e) => setFilters({...filters, muscleGroup: e.target.value})} className="w-full pl-14 pr-6 py-4 bg-gray-50 border-none rounded-[2rem] outline-none text-sm font-bold text-gray-700 appearance-none cursor-pointer">
+          <select  name="muscleGroup" value={filters.muscleGroup} onChange={(e) => setFilters({...filters, muscleGroup: e.target.value})} className="w-full pl-14 pr-6 py-4 bg-gray-50 border-none rounded-[2rem] outline-none text-sm font-bold text-gray-700 appearance-none cursor-pointer">
             <option value="">All muscle groups</option>
             {MUSCLE_GROUPS.map(group => <option key={group} value={group}>{group}</option>)}
           </select>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Tag, Camera, Save, Loader2, ChevronLeft, Scale, Ruler, ShieldCheck } from 'lucide-react';
+import { User, Mail, Tag, Camera, Save, Loader2, ChevronLeft, Scale, Ruler, ShieldCheck,Target,Check,ChevronDown, VenusAndMars, PencilLine, ClockAlert  } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { authApi } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from '../components/modals/ChangePasswordModal';
+import FormSelect from '../components/FormSelect';
 
 export default function ProfilePage() {
   const { user, setUser, setLoading: setGlobalLoading } = useAuth();
@@ -15,10 +16,19 @@ export default function ProfilePage() {
   const [uploading, setUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isPassModalOpen, setIsPassModalOpen] = useState(false);
-
+  const [isGoalOpen, setIsGoalOpen] = useState(false);
   const API_URL = import.meta.env.VITE_API_BASE_URL;
   const defaultAvatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF5-3YjBcXTqKUlOAeUUtuOLKgQSma2wGG1g&s";
-
+  const goals = [
+    { value: 'lose_weight', label: 'Lose Weight' },
+    { value: 'gain_muscle', label: 'Gain Muscle' },
+    { value: 'maintain', label: 'Maintain' }
+  ];
+  const genderOptions = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'other', label: 'Other' }
+];
   const [formData, setFormData] = useState({
     fullname: '', username: '', email: '', avatar: '', age: '', height: '', weight: '', goal: '', gender: '', provider: '',
   });
@@ -135,7 +145,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest not-italic">Age</label>
+                  <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2 not-italic"><ClockAlert size={14}/>Age</label>
                   <input type="number" disabled={!isEditing} value={formData.age} onChange={e => setFormData({...formData, age: e.target.value})} className="w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all disabled:opacity-60" />
                 </div>
 
@@ -149,17 +159,27 @@ export default function ProfilePage() {
                   <input type="number" disabled={!isEditing} value={formData.weight} onChange={e => setFormData({...formData, weight: e.target.value})} className="w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all disabled:opacity-60" />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest not-italic">Goal</label>
-                  <select disabled={!isEditing} value={formData.goal} onChange={e => setFormData({...formData, goal: e.target.value})} className="w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none focus:border-blue-400 transition-all disabled:opacity-60 appearance-none">
-                    <option value="">Select goal</option>
-                    <option value="lose_weight">Lose Weight</option>
-                    <option value="gain_muscle">Gain Muscle</option>
-                    <option value="maintain">Maintain</option>
-                  </select>
+                <div className="space-y-2 relative">
+                  <FormSelect
+                    label="Goal"
+                    icon={Target}
+                    options={goals}
+                    value={formData.goal}
+                    onChange={(val) => setFormData({ ...formData, goal: val })}
+                    disabled={!isEditing}
+                  />
                 </div>
               </div>
-
+              <div className="relative">
+               <FormSelect
+                  label="Gender"
+                  icon={VenusAndMars}
+                  options={genderOptions}
+                  value={formData.gender}
+                  onChange={(val) => setFormData({ ...formData, gender: val })}
+                  disabled={!isEditing}
+                />
+              </div>
               <div className="space-y-2">
                 <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2 not-italic"><Mail size={14}/> Email Address</label>
                 <input disabled={!isEditing || isSocialUser} type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className={`w-full bg-gray-50 border border-gray-100 p-4 rounded-2xl outline-none transition-all disabled:opacity-60 ${isSocialUser && isEditing ? 'italic text-gray-400' : ''}`} />
@@ -190,16 +210,16 @@ export default function ProfilePage() {
 
               <div className="flex gap-4 pt-6">
                 {!isEditing ? (
-                  <button type="button" onClick={() => setIsEditing(true)} className="flex-1 bg-gray-900 text-white py-4 rounded-2xl font-black shadow-xl shadow-gray-200 hover:bg-blue-600 hover:-translate-y-1 transition-all uppercase tracking-widest text-xs not-italic">
-                    Edit Profile
+                  <button type="button" onClick={() => setIsEditing(true)} className="flex-1 bg-gray-900 py-3 rounded-2xl font-bold text-gray-200 hover:bg-gray-200 hover:text-gray-900 transition-all flex items-center justify-center gap-2">
+                  <PencilLine size={18} />  Edit Profile
                   </button>
                 ) : (
                   <>
-                    <button type="button" onClick={() => setIsEditing(false)} className="flex-1 bg-gray-100 py-4 rounded-2xl font-black text-gray-500 hover:bg-gray-200 transition-all uppercase tracking-widest text-xs not-italic">
+                    <button type="button" onClick={() => setIsEditing(false)} className="flex-1 bg-gray-100 py-4 rounded-2xl font-black text-red-700 hover:bg-gray-200 transition-all uppercase tracking-widest text-xs not-italic">
                       Cancel
                     </button>
                     <button type="submit" disabled={submitting} className="flex-[2] bg-blue-600 text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-200 hover:bg-blue-700 hover:-translate-y-1 transition-all flex justify-center items-center gap-2 uppercase tracking-widest text-xs not-italic">
-                      {submitting ? <Loader2 className="animate-spin" size={20} /> : "Save Changes"}
+                      {submitting ? (<Loader2 className="animate-spin" size={20} />) : (<Save size={20} />)} Save Changes
                     </button>
                   </>
                 )}

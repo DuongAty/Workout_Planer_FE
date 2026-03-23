@@ -122,9 +122,9 @@ export default function ExerciseTracking() {
               </div>
               <button 
                 disabled={loading} 
-                className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-200"
+                className="w-full bg-gray-100 text-blue-700 py-5 rounded-2xl font-black uppercase tracking-widest hover:text-gray-100 hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-200"
               >
-                {loading ? 'Saving...' : 'Save This Set'}
+                {loading ? 'Saving...' :  'Save This Set'}
               </button>
             </form>
           </div>

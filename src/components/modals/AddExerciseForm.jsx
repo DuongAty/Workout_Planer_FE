@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { exerciseApi } from '../../api/endpoints';
 import { Upload, X, Image as ImageIcon, Film, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import FormSelect from '../FormSelect';
+import { MUSCLE_GROUPS } from '../../common/constants';
 
 export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
-  const muscleGroups = ["Ngực", "Lưng", "Vai", "Tay", "Chân", "Mông", "Bụng"];
+  const muscleGroups = [{value : '', label: 'Select muscle group'}].concat(MUSCLE_GROUPS.map(mg => ({value : mg, label: mg})));
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -122,16 +124,13 @@ export default function AddExerciseForm({ workoutId, onAdded, initialData }) {
               />
             </div>
             <div className="flex flex-col">
-              <label className="text-[10px] font-black text-gray-400 ml-2 mb-1 uppercase">Muscle Group</label>
-              <select 
-                required
-                className="p-4 rounded-2xl border-none bg-white shadow-sm focus:ring-2 focus:ring-blue-500 outline-none font-bold text-gray-700 appearance-none"
-                value={formData.muscleGroup}
-                onChange={e => setFormData({...formData, muscleGroup: e.target.value})}
-              >
-                <option value="" disabled>-- Choose muscle group --</option>
-                {muscleGroups.map(g => <option key={g} value={g}>{g}</option>)}
-              </select>
+                  <FormSelect
+                    label="Muscle Groups"
+                    options={muscleGroups}
+                    value={formData.muscleGroup}
+                    labelClassName='text-[10px] font-black text-gray-400 ml-2 mb-1 uppercase'
+                    onChange={(val) => setFormData({ ...formData, muscleGroup: val })}
+                  />
             </div>
             <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                 <label className="text-[10px] font-black text-gray-400 mb-3 uppercase flex justify-between items-center">

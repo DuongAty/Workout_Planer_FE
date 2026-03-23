@@ -110,7 +110,7 @@ export default function StepManagerModal({ isOpen, exerciseId, onClose, onSucces
 
         <div className="p-6 bg-white border-t flex gap-4">
           <button onClick={onClose} className="flex-1 font-bold text-gray-400 uppercase text-[11px] hover:text-red-500">Cancel</button>
-          <button onClick={handleSave} disabled={isSubmitting || loading} className="flex-[2] bg-gray-900 text-white py-4 rounded-2xl font-black uppercase text-[11px] flex items-center justify-center gap-2">
+          <button onClick={handleSave} disabled={isSubmitting || loading} className="flex-[2] bg-gray-100 text-blue-700 py-4 rounded-2xl font-black uppercase text-[11px] hover:bg-blue-700 hover:text-gray-100  flex items-center justify-center gap-2">
             {isSubmitting ? "Saving..." : <><Save size={16} /> Save & Update</>}
           </button>
         </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { workoutApi } from '../../api/endpoints';
-import { X, Calendar, Edit3, Loader2 } from 'lucide-react';
+import { X, Calendar, Edit3, Loader2, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const parseRRuleToDays = (rruleString) => {
@@ -153,7 +153,7 @@ export default function EditWorkoutModal({ isOpen, workout, onClose, onSuccess }
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
-            {loading ? <Loader2 className="animate-spin" size={18} /> : "SAVE CHANGES"}
+            {loading ? (<Loader2 className="animate-spin" size={18} />) : (<Save size={18} />)} SAVE CHANGES
           </button>
         </form>
       </div>
